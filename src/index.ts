@@ -12,7 +12,13 @@ import { getConfigs } from './utils';
         const { execute, rconEmitter } = rcon;
         const { logsEmitter } = logs;
 
-        await SquadJS({ rconEmitter, logsEmitter, execute, id: config.id });
+        await SquadJS({
+          execute,
+          id: config.id,
+          mapsName: config.mapsName,
+          rconEmitter,
+          logsEmitter,
+        });
       }
     }
   } catch (error) {

@@ -3,13 +3,12 @@ import { Rcon } from 'squad-rcon';
 import { initLogger } from './logger';
 import { getServersState } from './serversState';
 
-type Logger = ReturnType<typeof initLogger>;
-
 export type TConfig = {
   id: number;
   host: string;
   password: string;
   port: number;
+  mapsName: string;
   pluginsEnabled: string[];
   logFilePath?: string;
   ftp?: {
@@ -21,9 +20,10 @@ export type TConfig = {
 
 export type TServersState = {
   [key in number]: {
-    logger: Logger;
+    logger: TLogger;
     execute: TExecute;
     listener: EventEmitter;
+    maps: string[];
     // boolean for check current voting in plugins
     // votemap or skipmap
     votingActive?: boolean;
@@ -67,6 +67,7 @@ export type TSquad = {
 export type TSquadJS = {
   id: number;
   execute: TExecute;
+  mapsName: string;
   rconEmitter: EventEmitter;
   logsEmitter: EventEmitter;
 };
@@ -78,5 +79,6 @@ export type TEvents = {
 
 export type TPlugin = TGetServersState;
 
+export type TLogger = ReturnType<typeof initLogger>;
 export type TExecute = ReturnType<typeof Rcon>['execute'];
 export type TGetServersState = ReturnType<typeof getServersState>;
