@@ -1,4 +1,5 @@
-import { serversState } from '../../serversState';
+import { EVENTS } from '../../constants';
+import { getServersState } from '../../serversState';
 import { updateCurrentMap } from './updateCurrentMap';
 import { updateNextMap } from './updateNextMap';
 import { updatePlayers } from './updatePlayers';
@@ -10,7 +11,7 @@ export const initState = async (id: number) => {
   await updateCurrentMap(id);
   await updateNextMap(id);
 
-  const { listener } = serversState[id];
+  const { listener } = getServersState(id);
 
   setInterval(() => {
     updatePlayers(id);
@@ -20,7 +21,7 @@ export const initState = async (id: number) => {
     updateSquads(id);
   }, 30000);
 
-  listener.on('NEW_GAME', () => {
+  listener.on(EVENTS.NEW_GAME, () => {
     updateCurrentMap(id);
     updateNextMap(id);
   });

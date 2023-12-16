@@ -1,17 +1,19 @@
 import { TPlayer } from 'squad-rcon';
-import { serversState } from '../../serversState';
+import { EVENTS } from '../../constants';
+import { getServersState } from '../../serversState';
 
 export const updatePlayers = async (id: number) => {
-  const { execute, listener, logger } = serversState[id];
+  const { execute, listener, logger } = getServersState(id);
 
   logger.log('Updating players');
 
-  execute('ListPlayers');
+  execute(EVENTS.LIST_PLAYERS);
 
   return new Promise((res) => {
-    listener.once('ListPlayers', (data: TPlayer[]) => {
-      serversState[id].players = data.map((player) => {
-        const playerFound = serversState[id].players?.find(
+    listener.once(EVENTS.LIST_PLAYERS, (data: TPlayer[]) => {
+      const state = getServersState(id);
+      state.players = data.map((player) => {
+        const playerFound = state.players?.find(
           (p) => p.steamID === player.steamID,
         );
 
@@ -25,6 +27,9 @@ export const updatePlayers = async (id: number) => {
         return player;
       });
 
+      listener.emit(EVENTS.UPDATED_PLAYERS, state.players);
+
+      logger.log('Updated players');
       res(true);
     });
   });

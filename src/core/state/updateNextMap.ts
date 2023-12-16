@@ -1,17 +1,19 @@
 import { TMap } from 'squad-rcon';
-import { serversState } from '../../serversState';
+import { EVENTS } from '../../constants';
+import { getServersState } from '../../serversState';
 
 export const updateNextMap = async (id: number) => {
-  const { execute, listener, logger } = serversState[id];
+  const { execute, listener, logger } = getServersState(id);
 
   logger.log('Updating next map');
 
-  execute('ShowNextMap');
+  execute(EVENTS.SHOW_NEXT_MAP);
 
   return new Promise((res) => {
-    listener.once('ShowNextMap', (data: TMap) => {
-      serversState[id].nextMap = data;
+    listener.once(EVENTS.SHOW_NEXT_MAP, (data: TMap) => {
+      getServersState(id).nextMap = data;
 
+      logger.log('Updated next map');
       res(true);
     });
   });

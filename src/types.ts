@@ -1,6 +1,7 @@
 import EventEmitter from 'events';
 import { Rcon } from 'squad-rcon';
 import { initLogger } from './logger';
+import { getServersState } from './serversState';
 
 type Logger = ReturnType<typeof initLogger>;
 
@@ -23,6 +24,9 @@ export type TServersState = {
     logger: Logger;
     execute: TExecute;
     listener: EventEmitter;
+    // boolean for check current voting in plugins
+    // votemap or skipmap
+    votingActive?: boolean;
     players?: TPlayer[];
     squads?: TSquad[];
     playersCount?: number;
@@ -60,8 +64,6 @@ export type TSquad = {
   teamName: string | null;
 };
 
-export type TExecute = ReturnType<typeof Rcon>['execute'];
-
 export type TSquadJS = {
   id: number;
   execute: TExecute;
@@ -73,3 +75,8 @@ export type TEvents = {
   rconEmitter: EventEmitter;
   logsEmitter: EventEmitter;
 };
+
+export type TPlugin = TGetServersState;
+
+export type TExecute = ReturnType<typeof Rcon>['execute'];
+export type TGetServersState = ReturnType<typeof getServersState>;

@@ -1,4 +1,5 @@
 import { initLogger } from '../logger';
+import { initPlugins } from '../plugins';
 import { serversState } from '../serversState';
 import { TSquadJS } from '../types';
 import { initEvents } from './events';
@@ -16,4 +17,5 @@ export const SquadJS = async ({
   serversState[id] = { listener, execute, logger };
 
   await initState(id);
+  await initPlugins(id);
 };
