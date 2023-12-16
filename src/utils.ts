@@ -1,12 +1,13 @@
 import chalk from 'chalk';
 import fs from 'fs';
-import { URL } from 'url';
+import path from 'path';
+import url from 'url';
 import { TConfig } from './types';
 
-const __dirname = new URL('.', import.meta.url).pathname;
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 export const getConfigs = (): TConfig[] | null => {
-  const configPath = __dirname + '../config.json';
+  const configPath = path.resolve(__dirname, '../config.json');
 
   if (!fs.existsSync(configPath)) {
     console.log(chalk.yellow(`[SquadJS]`), chalk.red('Config file required!'));

@@ -133,4 +133,5 @@ dist
 
 #SquadJS
 
+package-lock.json
 config.json

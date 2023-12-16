@@ -1,13 +1,14 @@
 import fs from 'fs';
-import { URL } from 'url';
+import path from 'path';
+import url from 'url';
 import { TLogger } from '../../types';
 
-const __dirname = new URL('.', import.meta.url).pathname;
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 export const initMaps = async (mapsName: string, logger: TLogger) => {
   logger.log('Loading maps');
 
-  const filePath = __dirname + mapsName;
+  const filePath = path.resolve(__dirname, mapsName);
 
   if (!fs.existsSync(filePath)) {
     logger.error(`Maps ${mapsName} not found`);
