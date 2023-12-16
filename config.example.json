@@ -1,0 +1,18 @@
+{
+  "1": {
+    "host": "127.0.0.1",
+    "password": "password",
+    "port": 21110,
+    "logFilePath": "SquadGame/Saved/Logs/SquadGame.log"
+  },
+  "2": {
+    "host": "127.0.0.1",
+    "password": "pass",
+    "port": 21110,
+    "ftp": {
+      "logFilePath": "SquadGame/Saved/Logs/SquadGame.log",
+      "username": "root",
+      "password": "pass"
+    }
+  }
+}
