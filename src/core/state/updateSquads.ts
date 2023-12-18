@@ -1,5 +1,5 @@
 import { TSquad } from 'squad-rcon';
-import { EVENTS } from '../../constants';
+import { EVENTS, UPDATERS_REJECT_TIMEOUT } from '../../constants';
 import { getServersState } from '../../serversState';
 
 export const updateSquads = async (id: number) => {
@@ -9,7 +9,7 @@ export const updateSquads = async (id: number) => {
 
   execute(EVENTS.LIST_SQUADS);
 
-  return new Promise((res) => {
+  return new Promise((res, rej) => {
     listener.once(EVENTS.LIST_SQUADS, (data: TSquad[]) => {
       const state = getServersState(id);
       state.squads = [...data];
@@ -19,5 +19,7 @@ export const updateSquads = async (id: number) => {
       logger.log('Updated squads');
       res(true);
     });
+
+    setTimeout(() => rej('Updating squads error'), UPDATERS_REJECT_TIMEOUT);
   });
 };

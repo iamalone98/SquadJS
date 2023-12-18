@@ -1332,10 +1332,10 @@ slice-ansi@^7.0.0:
     ansi-styles "^6.2.1"
     is-fullwidth-code-point "^5.0.0"
 
-squad-logs@^1.0.13:
-  version "1.0.13"
-  resolved "https://registry.yarnpkg.com/squad-logs/-/squad-logs-1.0.13.tgz#01443f95d691c0fcceaf6f537d7885d98fcd875f"
-  integrity sha512-HUk+ge/6LZ7rOemDXWRw8vnkOMAyj27Bmip+3ujRXS6GLuuTQdxax3AWnVTFB0bXxUEqWy2zMZvilTq1hLhydw==
+squad-logs@^1.0.14:
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/squad-logs/-/squad-logs-1.0.14.tgz#5ab8b949a14af0e6628cc1ade566301df2310379"
+  integrity sha512-K9/lNGTLLMSzidk6S/vx+s5TRxRoh5ZcD68r57xtaYNXV4nwIxctVjforA2e86NmFaH+biTVD0hyhqnlWbGFCg==
   dependencies:
     chalk "^5.3.0"
     ssh2-sftp-client "^9.1.0"

@@ -6,6 +6,7 @@ export const EVENTS = {
   ...LogsReaderEvents,
   LIST_PLAYERS: 'ListPlayers',
   LIST_SQUADS: 'ListSquads',
+  UPDATED_ADMINS: 'UPDATED_ADMINS',
   UPDATED_PLAYERS: 'UPDATED_PLAYERS',
   UPDATED_SQUADS: 'UPDATED_SQUADS',
   SHOW_CURRENT_MAP: 'ShowCurrentMap',
@@ -15,3 +16,5 @@ export const EVENTS = {
 
   CHAT_COMMANDS_SKIPMAP: 'CHAT_COMMAND:skipmap',
 };
+
+export const UPDATERS_REJECT_TIMEOUT = 3000;

@@ -1,4 +1,5 @@
 import EventEmitter from 'events';
+import { LogsReader } from 'squad-logs';
 import { Rcon } from 'squad-rcon';
 import { initLogger } from './logger';
 import { getServersState } from './serversState';
@@ -10,9 +11,9 @@ export type TConfig = {
   port: number;
   mapsName: string;
   pluginsEnabled: string[];
-  logFilePath?: string;
+  adminsFilePath: string;
+  logFilePath: string;
   ftp?: {
-    logFilePath: string;
     username: string;
     password: string;
   };
@@ -27,6 +28,7 @@ export type TServersState = {
     // boolean for check current voting in plugins
     // votemap or skipmap
     votingActive?: boolean;
+    admins?: TAdmin;
     players?: TPlayer[];
     squads?: TSquad[];
     playersCount?: number;
@@ -40,6 +42,10 @@ export type TServersState = {
     };
     tickRate?: string;
   };
+};
+
+export type TAdmin = {
+  [key in string]: { [key in string]: boolean };
 };
 
 export type TPlayer = {
@@ -68,6 +74,7 @@ export type TSquadJS = {
   id: number;
   execute: TExecute;
   mapsName: string;
+  getAdmins: TGetAdmins;
   rconEmitter: EventEmitter;
   logsEmitter: EventEmitter;
 };
@@ -79,6 +86,7 @@ export type TEvents = {
 
 export type TPlugin = TGetServersState;
 
+export type TGetAdmins = LogsReader['getAdminsFile'];
 export type TLogger = ReturnType<typeof initLogger>;
 export type TExecute = ReturnType<typeof Rcon>['execute'];
 export type TGetServersState = ReturnType<typeof getServersState>;

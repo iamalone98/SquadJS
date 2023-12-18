@@ -17,9 +17,17 @@ export const getConfigs = (): TConfig[] | null => {
   const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
 
   return Object.keys(config).map((key) => {
-    const { host, password, port, mapsName, logFilePath, ftp } = config[key];
+    const { host, password, port, mapsName, logFilePath, adminsFilePath } =
+      config[key];
 
-    if (!host || !password || !port || !mapsName || (!logFilePath && !ftp)) {
+    if (
+      !host ||
+      !password ||
+      !port ||
+      !mapsName ||
+      !logFilePath ||
+      !adminsFilePath
+    ) {
       console.log(
         chalk.yellow(`[SquadJS]`),
         chalk.red('Missed required params!'),

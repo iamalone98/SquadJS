@@ -1,8 +1,8 @@
 import chalk from 'chalk';
-import { SquadJS, initServer } from './core';
+import { initServer, initSquadJS } from './core';
 import { getConfigs } from './utils';
 
-(async () => {
+const initial = async () => {
   try {
     const configs = getConfigs();
 
@@ -10,12 +10,13 @@ import { getConfigs } from './utils';
       for (const config of configs) {
         const [rcon, logs] = await initServer(config);
         const { execute, rconEmitter } = rcon;
-        const { logsEmitter } = logs;
+        const { logsEmitter, getAdmins } = logs;
 
-        await SquadJS({
+        await initSquadJS({
           execute,
           id: config.id,
           mapsName: config.mapsName,
+          getAdmins,
           rconEmitter,
           logsEmitter,
         });
@@ -24,4 +25,6 @@ import { getConfigs } from './utils';
   } catch (error) {
     console.log(chalk.yellow(`[SquadJS]`), chalk.red(error));
   }
-})();
+};
+
+initial();
