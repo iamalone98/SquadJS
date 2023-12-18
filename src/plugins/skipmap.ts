@@ -19,7 +19,7 @@ export const skipmap = (state: TPlugin) => {
     '-': [],
   };
 
-  listener.on(EVENTS.CHAT_COMMANDS_SKIPMAP, (data: TChatMessage) => {
+  const chatCommand = (data: TChatMessage) => {
     const { steamID } = data;
 
     if (state.votingActive || voteStarting) {
@@ -89,9 +89,9 @@ export const skipmap = (state: TPlugin) => {
         adminBroadcast(execute, 'Используйте +(За) -(Против) для голосования');
       }
     }, voteTick);
-  });
+  };
 
-  listener.on(EVENTS.CHAT_MESSAGE, (data: TChatMessage) => {
+  const chatMessage = (data: TChatMessage) => {
     const { steamID } = data;
     const message = data.message.trim();
 
@@ -104,15 +104,21 @@ export const skipmap = (state: TPlugin) => {
 
       adminWarn(execute, steamID, 'Твой голос принят!');
     }
-  });
+  };
 
-  listener.on(EVENTS.NEW_GAME, () => {
-    reset();
+  const newGame = () => {
+    () => {
+      reset();
 
-    timerDelayStarting = setTimeout(() => {
-      voteReadyToStart = true;
-    }, 60000);
-  });
+      timerDelayStarting = setTimeout(() => {
+        voteReadyToStart = true;
+      }, 60000);
+    };
+  };
+
+  listener.on(EVENTS.CHAT_COMMANDS_SKIPMAP, chatCommand);
+  listener.on(EVENTS.CHAT_MESSAGE, chatMessage);
+  listener.on(EVENTS.NEW_GAME, newGame);
 
   const reset = () => {
     clearTimeout(timerDelayNextStart);

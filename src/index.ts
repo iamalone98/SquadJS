@@ -16,6 +16,7 @@ const initial = async () => {
           execute,
           id: config.id,
           mapsName: config.mapsName,
+          mapsRegExp: config.mapsRegExp,
           getAdmins,
           rconEmitter,
           logsEmitter,

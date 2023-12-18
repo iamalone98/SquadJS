@@ -7,7 +7,8 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "nodemon src/index.ts",
+    "start": "ts-node ./src/index.ts",
+    "start:dev": "nodemon src/index.ts",
     "lint:check": "tsc --noEmit && eslint --ext .ts src/ && prettier src/ --check --ignore-unknown",
     "lint:format": "eslint --fix --ext .ts src/ && prettier src/ --write --ignore-unknown",
     "prepare": "husky install"
@@ -15,8 +16,8 @@
   "dependencies": {
     "chalk": "^5.3.0",
     "date-fns": "^2.30.0",
-    "squad-logs": "^1.0.14",
-    "squad-rcon": "^1.0.19"
+    "squad-logs": "^1.0.15",
+    "squad-rcon": "^1.0.21"
   },
   "devDependencies": {
     "@types/node": "^20.8.7",

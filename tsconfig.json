@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": "./src/index.ts",
-    "target": "ES6",
+    "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "node",
     "strict": true,
@@ -13,6 +13,6 @@
     "esm": true,
     "experimentalSpecifierResolution": "node",
   },
-  "include": ["src/**/*.ts", "squad.config.js"],
+  "include": ["src/**/*.ts"],
   "exclude": ["./node_modules"]
 }

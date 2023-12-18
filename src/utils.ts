@@ -17,16 +17,24 @@ export const getConfigs = (): TConfig[] | null => {
   const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
 
   return Object.keys(config).map((key) => {
-    const { host, password, port, mapsName, logFilePath, adminsFilePath } =
-      config[key];
+    const {
+      host,
+      password,
+      port,
+      mapsName,
+      logFilePath,
+      adminsFilePath,
+      mapsRegExp,
+    } = config[key];
 
     if (
       !host ||
       !password ||
       !port ||
-      !mapsName ||
       !logFilePath ||
-      !adminsFilePath
+      !adminsFilePath ||
+      !mapsName ||
+      !mapsRegExp
     ) {
       console.log(
         chalk.yellow(`[SquadJS]`),

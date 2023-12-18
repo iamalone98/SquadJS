@@ -10,13 +10,14 @@ export const initSquadJS = async ({
   id,
   execute,
   mapsName,
+  mapsRegExp,
   getAdmins,
   rconEmitter,
   logsEmitter,
 }: TSquadJS) => {
   const listener = initEvents({ rconEmitter, logsEmitter });
   const logger = initLogger(id, true);
-  const maps = await initMaps(mapsName, logger);
+  const maps = await initMaps(mapsName, mapsRegExp, logger);
 
   serversState[id] = { listener, execute, logger, maps };
 

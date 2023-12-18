@@ -4,13 +4,9 @@ import { RconEvents } from 'squad-rcon';
 export const EVENTS = {
   ...RconEvents,
   ...LogsReaderEvents,
-  LIST_PLAYERS: 'ListPlayers',
-  LIST_SQUADS: 'ListSquads',
   UPDATED_ADMINS: 'UPDATED_ADMINS',
   UPDATED_PLAYERS: 'UPDATED_PLAYERS',
   UPDATED_SQUADS: 'UPDATED_SQUADS',
-  SHOW_CURRENT_MAP: 'ShowCurrentMap',
-  SHOW_NEXT_MAP: 'ShowNextMap',
 
   // CHAT COMMANDS
 

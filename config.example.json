@@ -5,7 +5,8 @@
     "port": 21110,
     "logFilePath": "/SquadGame/Saved/Logs/SquadGame.log",
     "adminsFilePath": "/SquadGame/ServerConfig/Admins.cfg",
-    "mapsName": "vanilla.json"
+    "mapsName": "vanilla.json",
+    "mapsRegExp": "(?<layerName>[a-zA-Z]+)_(?<layerMode>.*)"
   },
   "2": {
     "host": "127.0.0.1",
@@ -13,7 +14,8 @@
     "port": 21110,
     "logFilePath": "/SquadGame/Saved/Logs/SquadGame.log",
     "adminsFilePath": "/SquadGame/ServerConfig/Admins.cfg",
-    "mapsName": "vanilla.json",
+    "mapsName": "mee.json",
+    "mapsRegExp": "([a-zA-Z]+)_(?<layerName>[a-zA-Z]+)_(?<layerMode>.*)",
     "ftp": {
       "username": "root",
       "password": "pass"

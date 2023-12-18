@@ -18,9 +18,6 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
 
   setInterval(() => {
     updatePlayers(id);
-  }, 30000);
-
-  setInterval(() => {
     updateSquads(id);
   }, 30000);
 

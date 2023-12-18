@@ -7,7 +7,7 @@ export const initLogger = (id: number, enabled: boolean) => ({
   log: (...text: string[]) => {
     enabled &&
       console.log(
-        chalk.yellow(`[SquadRcon][${id}][${getTime()}]`),
+        chalk.yellow(`[SquadJS][${id}][${getTime()}]`),
         chalk.green(text),
       );
   },
@@ -15,7 +15,7 @@ export const initLogger = (id: number, enabled: boolean) => ({
   warn: (...text: string[]) => {
     enabled &&
       console.log(
-        chalk.yellow(`[SquadRcon][${id}][${getTime()}]`),
+        chalk.yellow(`[SquadJS][${id}][${getTime()}]`),
         chalk.magenta(text),
       );
   },
@@ -23,7 +23,7 @@ export const initLogger = (id: number, enabled: boolean) => ({
   error: (...text: string[]) => {
     enabled &&
       console.log(
-        chalk.yellow(`[SquadRcon][${id}][${getTime()}]`),
+        chalk.yellow(`[SquadJS][${id}][${getTime()}]`),
         chalk.red(text),
       );
   },
