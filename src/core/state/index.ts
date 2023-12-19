@@ -16,14 +16,14 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
 
   const { listener } = getServersState(id);
 
-  setInterval(() => {
-    updatePlayers(id);
-    updateSquads(id);
+  setInterval(async () => {
+    await updatePlayers(id);
+    await updateSquads(id);
   }, 30000);
 
-  listener.on(EVENTS.NEW_GAME, () => {
-    updateAdmins(id, getAdmins);
-    updateCurrentMap(id);
-    updateNextMap(id);
+  listener.on(EVENTS.NEW_GAME, async () => {
+    await updateAdmins(id, getAdmins);
+    await updateCurrentMap(id);
+    await updateNextMap(id);
   });
 };

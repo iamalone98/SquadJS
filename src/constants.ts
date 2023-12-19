@@ -13,4 +13,4 @@ export const EVENTS = {
   CHAT_COMMANDS_SKIPMAP: 'CHAT_COMMAND:skipmap',
 };
 
-export const UPDATERS_REJECT_TIMEOUT = 3000;
+export const UPDATERS_REJECT_TIMEOUT = 10000;
