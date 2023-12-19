@@ -6,7 +6,8 @@
     "logFilePath": "/SquadGame/Saved/Logs/SquadGame.log",
     "adminsFilePath": "/SquadGame/ServerConfig/Admins.cfg",
     "mapsName": "vanilla.json",
-    "mapsRegExp": "(?<layerName>[a-zA-Z]+)_(?<layerMode>.*)"
+    "mapsRegExp": "(?<layerName>[a-zA-Z]+)_(?<layerMode>.*)",
+    "plugins": ["skipmap"]
   },
   "2": {
     "host": "127.0.0.1",
@@ -16,6 +17,7 @@
     "adminsFilePath": "/SquadGame/ServerConfig/Admins.cfg",
     "mapsName": "mee.json",
     "mapsRegExp": "([a-zA-Z]+)_(?<layerName>[a-zA-Z]+)_(?<layerMode>.*)",
+    "plugins": ["skipmap"],
     "ftp": {
       "username": "root",
       "password": "pass"

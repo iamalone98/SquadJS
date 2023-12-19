@@ -11,7 +11,7 @@ export type TConfig = {
   port: number;
   mapsName: string;
   mapsRegExp: string;
-  pluginsEnabled: string[];
+  plugins: string[];
   adminsFilePath: string;
   logFilePath: string;
   ftp?: {
@@ -26,6 +26,7 @@ export type TServersState = {
     execute: TExecute;
     listener: EventEmitter;
     maps: TMaps;
+    plugins: string[];
     // boolean for check current voting in plugins
     // votemap or skipmap
     votingActive?: boolean;
@@ -41,7 +42,7 @@ export type TServersState = {
       level: string | null;
       layer: string | null;
     };
-    tickRate?: string;
+    tickRate?: string; // TODO
   };
 };
 
@@ -80,6 +81,7 @@ export type TSquadJS = {
   execute: TExecute;
   mapsName: string;
   mapsRegExp: string;
+  plugins: string[];
   getAdmins: TGetAdmins;
   rconEmitter: EventEmitter;
   logsEmitter: EventEmitter;

@@ -25,6 +25,7 @@ export const getConfigs = (): TConfig[] | null => {
       logFilePath,
       adminsFilePath,
       mapsRegExp,
+      plugins,
     } = config[key];
 
     if (
@@ -34,7 +35,8 @@ export const getConfigs = (): TConfig[] | null => {
       !logFilePath ||
       !adminsFilePath ||
       !mapsName ||
-      !mapsRegExp
+      !mapsRegExp ||
+      !plugins
     ) {
       console.log(
         chalk.yellow(`[SquadJS]`),

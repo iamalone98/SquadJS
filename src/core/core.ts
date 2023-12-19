@@ -11,6 +11,7 @@ export const initSquadJS = async ({
   execute,
   mapsName,
   mapsRegExp,
+  plugins,
   getAdmins,
   rconEmitter,
   logsEmitter,
@@ -19,7 +20,7 @@ export const initSquadJS = async ({
   const logger = initLogger(id, true);
   const maps = await initMaps(mapsName, mapsRegExp, logger);
 
-  serversState[id] = { listener, execute, logger, maps };
+  serversState[id] = { listener, execute, logger, maps, plugins };
 
   await initState(id, getAdmins);
   await initPlugins(id);
