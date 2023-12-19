@@ -1,4 +1,4 @@
-import { EVENTS } from '../../constants';
+import { EVENTS, UPDATE_TIMEOUT } from '../../constants';
 import { getServersState } from '../../serversState';
 import { TGetAdmins } from '../../types';
 import { updateAdmins } from './updateAdmins';
@@ -16,10 +16,24 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
 
   const { listener } = getServersState(id);
 
+  let updateTimeout: NodeJS.Timeout;
+  let canRunUpdateInterval = true;
   setInterval(async () => {
+    if (!canRunUpdateInterval) return;
     await updatePlayers(id);
     await updateSquads(id);
-  }, 30000);
+  }, UPDATE_TIMEOUT);
+
+  listener.on(EVENTS.PLAYER_CONNECTED, async () => {
+    canRunUpdateInterval = false;
+    clearTimeout(updateTimeout);
+    await updatePlayers(id);
+    await updateSquads(id);
+    updateTimeout = setTimeout(
+      () => (canRunUpdateInterval = true),
+      UPDATE_TIMEOUT,
+    );
+  });
 
   listener.on(EVENTS.NEW_GAME, async () => {
     await updateAdmins(id, getAdmins);
