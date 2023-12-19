@@ -18,6 +18,36 @@ export const updatePlayers = async (id: number) => {
         );
 
         if (playerFound) {
+          if (player.teamID !== playerFound.teamID)
+            listener.emit(EVENTS.PLAYER_TEAM_CHANGED, {
+              player: player,
+              oldTeamID: playerFound.teamID,
+              newTeamID: player.teamID,
+            });
+          if (player.squadID !== playerFound.squadID)
+            listener.emit(EVENTS.PLAYER_SQUAD_CHANGED, {
+              player: player,
+              oldSquadID: playerFound.squadID,
+              newSquadID: player.squadID,
+            });
+
+          if (player.role !== playerFound.role)
+            listener.emit(EVENTS.PLAYER_ROLE_CHANGED, {
+              player: player,
+              oldRole: playerFound.role,
+              newRole: player.role,
+              isLeader: player.isLeader,
+            });
+
+          if (player.isLeader !== playerFound.isLeader) {
+            listener.emit(EVENTS.PLAYER_LEADER_CHANGED, {
+              player: player,
+              oldRole: playerFound.role,
+              newRole: player.role,
+              isLeader: player.isLeader,
+            });
+          }
+
           return {
             ...playerFound,
             ...player,

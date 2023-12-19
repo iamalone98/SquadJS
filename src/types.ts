@@ -85,6 +85,32 @@ export type TSquadJS = {
   logsEmitter: EventEmitter;
 };
 
+export type TPlayerTeamChanged = {
+  player: TPlayer;
+  oldTeamID: string;
+  newTeamID: string;
+};
+
+export type TPlayerSquadChanged = {
+  player: TPlayer;
+  oldSquadID?: string | null;
+  newSquadID?: string | null;
+};
+
+export type TPlayerLeaderChanged = {
+  player: TPlayer;
+  oldRole: string;
+  newRole: string;
+  isLeader: boolean;
+};
+
+export type TPlayerRoleChanged = {
+  player: TPlayer;
+  oldRole: string;
+  newRole: string;
+  isLeader: boolean;
+};
+
 export type TEvents = {
   rconEmitter: EventEmitter;
   logsEmitter: EventEmitter;
