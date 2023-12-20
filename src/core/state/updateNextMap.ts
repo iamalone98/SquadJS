@@ -17,6 +17,9 @@ export const updateNextMap = async (id: number) => {
       res(true);
     });
 
-    setTimeout(() => rej('Updating next map error'), UPDATERS_REJECT_TIMEOUT);
+    setTimeout(
+      () => rej({ id, message: 'Updating next map error' }),
+      UPDATERS_REJECT_TIMEOUT,
+    );
   });
 };

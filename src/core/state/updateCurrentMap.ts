@@ -18,7 +18,7 @@ export const updateCurrentMap = async (id: number) => {
     });
 
     setTimeout(
-      () => rej('Updating current map error'),
+      () => rej({ id, message: 'Updating current map error' }),
       UPDATERS_REJECT_TIMEOUT,
     );
   });

@@ -1332,20 +1332,20 @@ slice-ansi@^7.0.0:
     ansi-styles "^6.2.1"
     is-fullwidth-code-point "^5.0.0"
 
-squad-logs@^1.0.9:
-  version "1.0.16"
-  resolved "https://registry.yarnpkg.com/squad-logs/-/squad-logs-1.0.16.tgz#8c38dd9eda121976915822dbdd33172511e91aff"
-  integrity sha512-/mj4JkJBYlqzOeTWD1p2aP+iW3E6gqVXFWqtbFpW2oupeFj2AsU/yMAJpLQf5B/R4sDhcQNLWy7oNMGADAmo9w==
+squad-logs@^1.0.18:
+  version "1.0.18"
+  resolved "https://registry.yarnpkg.com/squad-logs/-/squad-logs-1.0.18.tgz#7aabc997a06faff6dd69c6c42362274e3465e54d"
+  integrity sha512-Dn1cVhlKC04mOvKS5zAxgkrDVx4cmxSJyay9GEokEoGBV39H5lh0PUuzND4PrWytEg2WEnSL5n2JCjU2cT3U2Q==
   dependencies:
     chalk "^5.3.0"
     date-fns "^2.30.0"
     ssh2-sftp-client "^9.1.0"
     tail "^2.2.6"
 
-squad-rcon@^1.0.23:
-  version "1.0.23"
-  resolved "https://registry.yarnpkg.com/squad-rcon/-/squad-rcon-1.0.23.tgz#5bc8d7976cf09cfc701a18f039fef53cd6483f51"
-  integrity sha512-63sLfxsUcYWie5O+dmWqdCdsQPM13/ibXSqxYMfcEdMD6+WjJuvzo95Epn3pRqtNrmTNtZyQL3smyWMPkEa/Vg==
+squad-rcon@^1.0.24:
+  version "1.0.24"
+  resolved "https://registry.yarnpkg.com/squad-rcon/-/squad-rcon-1.0.24.tgz#2a356bd851e0c22458f0f26e2a4076eb5a2afaf8"
+  integrity sha512-wi9olSkF2aGUy8jF4IpGHigA8J3i/buyyNeXIW762VtPm5b50/X3Ed+YRret8dRJsMAf/3G2+uSpuMlLW7p4TQ==
   dependencies:
     chalk "^5.3.0"
     date-fns "^2.30.0"

@@ -63,6 +63,9 @@ export const updatePlayers = async (id: number) => {
       res(true);
     });
 
-    setTimeout(() => rej('Updating players error'), UPDATERS_REJECT_TIMEOUT);
+    setTimeout(
+      () => rej({ id, message: 'Updating players' }),
+      UPDATERS_REJECT_TIMEOUT,
+    );
   });
 };

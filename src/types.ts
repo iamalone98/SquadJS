@@ -22,6 +22,8 @@ export type TConfig = {
 
 export type TServersState = {
   [key in number]: {
+    rcon: TRcon;
+    logs: TLogs;
     logger: TLogger;
     execute: TExecute;
     listener: EventEmitter;
@@ -78,13 +80,11 @@ export type TSquad = {
 
 export type TSquadJS = {
   id: number;
-  execute: TExecute;
   mapsName: string;
   mapsRegExp: string;
   plugins: string[];
-  getAdmins: TGetAdmins;
-  rconEmitter: EventEmitter;
-  logsEmitter: EventEmitter;
+  rcon: TRcon;
+  logs: TLogs;
 };
 
 export type TPlayerTeamChanged = {
@@ -118,9 +118,25 @@ export type TEvents = {
   logsEmitter: EventEmitter;
 };
 
+export type TError = {
+  id?: number;
+  message: string;
+};
+
 export type TPlugin = TGetServersState;
 
 export type TGetAdmins = LogsReader['getAdminsFile'];
 export type TLogger = ReturnType<typeof initLogger>;
 export type TExecute = ReturnType<typeof Rcon>['execute'];
 export type TGetServersState = ReturnType<typeof getServersState>;
+
+export type TRcon = {
+  execute: TExecute;
+  rconEmitter: EventEmitter;
+  close: () => Promise<unknown>;
+};
+export type TLogs = {
+  logsEmitter: EventEmitter;
+  getAdmins: TGetAdmins;
+  close: () => Promise<void>;
+};

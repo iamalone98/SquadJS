@@ -20,6 +20,9 @@ export const updateSquads = async (id: number) => {
       res(true);
     });
 
-    setTimeout(() => rej('Updating squads error'), UPDATERS_REJECT_TIMEOUT);
+    setTimeout(
+      () => rej({ id, message: 'Updating squads error' }),
+      UPDATERS_REJECT_TIMEOUT,
+    );
   });
 };

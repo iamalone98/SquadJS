@@ -24,7 +24,7 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
     await updateSquads(id);
   }, UPDATE_TIMEOUT);
 
-  listener.on(EVENTS.PLAYER_CONNECTED, async () => {
+  const updatesOnEvents = async () => {
     canRunUpdateInterval = false;
     clearTimeout(updateTimeout);
     await updatePlayers(id);
@@ -33,7 +33,10 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
       () => (canRunUpdateInterval = true),
       UPDATE_TIMEOUT,
     );
-  });
+  };
+
+  listener.on(EVENTS.PLAYER_CONNECTED, updatesOnEvents);
+  listener.on(EVENTS.SQUAD_CREATED, updatesOnEvents);
 
   listener.on(EVENTS.NEW_GAME, async () => {
     await updateAdmins(id, getAdmins);
