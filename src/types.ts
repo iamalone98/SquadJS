@@ -123,7 +123,7 @@ export type TError = {
   message: string;
 };
 
-export type TPlugin = TGetServersState;
+export type TState = TGetServersState;
 
 export type TGetAdmins = LogsReader['getAdminsFile'];
 export type TLogger = ReturnType<typeof initLogger>;

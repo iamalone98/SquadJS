@@ -1,9 +1,9 @@
 import { TChatMessage } from 'squad-rcon';
 import { EVENTS } from '../constants';
 import { adminBroadcast, adminEndMatch, adminWarn } from '../core';
-import { TPlugin } from '../types';
+import { TState } from '../types';
 
-export const skipmap = (state: TPlugin) => {
+export const skipmap = (state: TState) => {
   const { listener, execute } = state;
   const voteTick = 30000;
   const voteDuration = 120000;
