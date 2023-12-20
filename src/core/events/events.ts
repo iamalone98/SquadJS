@@ -5,9 +5,11 @@ import { TEvents } from '../../types';
 import { chatCommandParser, convertObjToArrayEvents } from './helpers';
 
 export const initEvents = ({ rconEmitter, logsEmitter }: TEvents) => {
-  const emitter = new EventEmitter();
+  const coreEmitter = new EventEmitter();
+  const localEmitter = new EventEmitter();
 
-  emitter.setMaxListeners(20);
+  coreEmitter.setMaxListeners(20);
+  localEmitter.setMaxListeners(30);
 
   const rconEvents = convertObjToArrayEvents(RconEvents);
   const logsEvents = convertObjToArrayEvents(LogsReaderEvents);
@@ -15,16 +17,16 @@ export const initEvents = ({ rconEmitter, logsEmitter }: TEvents) => {
   /* RCON EVENTS */
 
   rconEvents.forEach((event) => {
-    rconEmitter.on(event, (data) => emitter.emit(event, data));
+    rconEmitter.on(event, (data) => coreEmitter.emit(event, data));
   });
 
   /* LOGS EVENTS */
 
   logsEvents.forEach((event) => {
-    logsEmitter.on(event, (data) => emitter.emit(event, data));
+    logsEmitter.on(event, (data) => coreEmitter.emit(event, data));
   });
 
-  chatCommandParser(emitter);
+  chatCommandParser(coreEmitter);
 
-  return emitter;
+  return { coreEmitter, localEmitter };
 };

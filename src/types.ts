@@ -26,6 +26,7 @@ export type TServersState = {
     logs: TLogs;
     logger: TLogger;
     execute: TExecute;
+    coreListener: EventEmitter;
     listener: EventEmitter;
     maps: TMaps;
     plugins: string[];

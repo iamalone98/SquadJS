@@ -3,7 +3,7 @@ import { getServersState } from '../../serversState';
 import { TGetAdmins } from '../../types';
 
 export const updateAdmins = async (id: number, getAdmins: TGetAdmins) => {
-  const { listener, logger } = getServersState(id);
+  const { coreListener, logger } = getServersState(id);
 
   logger.log('Updating admins');
 
@@ -12,7 +12,7 @@ export const updateAdmins = async (id: number, getAdmins: TGetAdmins) => {
   const state = getServersState(id);
   state.admins = admins;
 
-  listener.emit(EVENTS.UPDATED_ADMINS, state.admins);
+  coreListener.emit(EVENTS.UPDATED_ADMINS, state.admins);
 
   logger.log('Updated admins');
 };

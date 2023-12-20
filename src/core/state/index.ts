@@ -14,7 +14,7 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
   await updatePlayers(id);
   await updateSquads(id);
 
-  const { listener } = getServersState(id);
+  const { coreListener, listener } = getServersState(id);
 
   let updateTimeout: NodeJS.Timeout;
   let canRunUpdateInterval = true;
@@ -35,12 +35,19 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
     );
   };
 
-  listener.on(EVENTS.PLAYER_CONNECTED, updatesOnEvents);
-  listener.on(EVENTS.SQUAD_CREATED, updatesOnEvents);
+  for (const event in EVENTS) {
+    coreListener.on(event, async (data) => {
+      if (event === EVENTS.PLAYER_CONNECTED || event === EVENTS.SQUAD_CREATED) {
+        await updatesOnEvents();
+      }
 
-  listener.on(EVENTS.NEW_GAME, async () => {
-    await updateAdmins(id, getAdmins);
-    await updateCurrentMap(id);
-    await updateNextMap(id);
-  });
+      if (event === EVENTS.NEW_GAME) {
+        await updateAdmins(id, getAdmins);
+        await updateCurrentMap(id);
+        await updateNextMap(id);
+      }
+
+      listener.emit(event, data);
+    });
+  }
 };

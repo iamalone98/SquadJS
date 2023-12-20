@@ -3,14 +3,14 @@ import { EVENTS, UPDATERS_REJECT_TIMEOUT } from '../../constants';
 import { getServersState } from '../../serversState';
 
 export const updatePlayers = async (id: number) => {
-  const { execute, listener, logger } = getServersState(id);
+  const { execute, coreListener, logger } = getServersState(id);
 
   logger.log('Updating players');
 
   execute(EVENTS.LIST_PLAYERS);
 
   return new Promise((res, rej) => {
-    listener.once(EVENTS.LIST_PLAYERS, (data: TPlayer[]) => {
+    coreListener.once(EVENTS.LIST_PLAYERS, (data: TPlayer[]) => {
       const state = getServersState(id);
       state.players = data.map((player) => {
         const playerFound = state.players?.find(
@@ -19,20 +19,20 @@ export const updatePlayers = async (id: number) => {
 
         if (playerFound) {
           if (player.teamID !== playerFound.teamID)
-            listener.emit(EVENTS.PLAYER_TEAM_CHANGED, {
+            coreListener.emit(EVENTS.PLAYER_TEAM_CHANGED, {
               player: player,
               oldTeamID: playerFound.teamID,
               newTeamID: player.teamID,
             });
           if (player.squadID !== playerFound.squadID)
-            listener.emit(EVENTS.PLAYER_SQUAD_CHANGED, {
+            coreListener.emit(EVENTS.PLAYER_SQUAD_CHANGED, {
               player: player,
               oldSquadID: playerFound.squadID,
               newSquadID: player.squadID,
             });
 
           if (player.role !== playerFound.role)
-            listener.emit(EVENTS.PLAYER_ROLE_CHANGED, {
+            coreListener.emit(EVENTS.PLAYER_ROLE_CHANGED, {
               player: player,
               oldRole: playerFound.role,
               newRole: player.role,
@@ -40,7 +40,7 @@ export const updatePlayers = async (id: number) => {
             });
 
           if (player.isLeader !== playerFound.isLeader) {
-            listener.emit(EVENTS.PLAYER_LEADER_CHANGED, {
+            coreListener.emit(EVENTS.PLAYER_LEADER_CHANGED, {
               player: player,
               oldRole: playerFound.role,
               newRole: player.role,
@@ -57,7 +57,7 @@ export const updatePlayers = async (id: number) => {
         return player;
       });
 
-      listener.emit(EVENTS.UPDATED_PLAYERS, state.players);
+      coreListener.emit(EVENTS.UPDATED_PLAYERS, state.players);
 
       logger.log('Updated players');
       res(true);
