@@ -116,7 +116,7 @@ export const skipmap = (state: TState) => {
     };
   };
 
-  listener.on(EVENTS.CHAT_COMMANDS_SKIPMAP, chatCommand);
+  listener.on(EVENTS.CHAT_COMMAND_SKIPMAP, chatCommand);
   listener.on(EVENTS.CHAT_MESSAGE, chatMessage);
   listener.on(EVENTS.NEW_GAME, newGame);
 

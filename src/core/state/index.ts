@@ -1,6 +1,7 @@
-import { EVENTS, UPDATE_TIMEOUT } from '../../constants';
+import { UPDATE_TIMEOUT } from '../../constants';
 import { getServersState } from '../../serversState';
 import { TGetAdmins } from '../../types';
+import { EVENTS } from './../../constants';
 import { updateAdmins } from './updateAdmins';
 import { updateCurrentMap } from './updateCurrentMap';
 import { updateNextMap } from './updateNextMap';
@@ -35,7 +36,8 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
     );
   };
 
-  for (const event in EVENTS) {
+  for (const key in EVENTS) {
+    const event = EVENTS[key as keyof typeof EVENTS];
     coreListener.on(event, async (data) => {
       if (event === EVENTS.PLAYER_CONNECTED || event === EVENTS.SQUAD_CREATED) {
         await updatesOnEvents();

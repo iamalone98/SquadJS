@@ -8,8 +8,8 @@ export const initEvents = ({ rconEmitter, logsEmitter }: TEvents) => {
   const coreEmitter = new EventEmitter();
   const localEmitter = new EventEmitter();
 
-  coreEmitter.setMaxListeners(20);
-  localEmitter.setMaxListeners(30);
+  coreEmitter.setMaxListeners(50);
+  localEmitter.setMaxListeners(50);
 
   const rconEvents = convertObjToArrayEvents(RconEvents);
   const logsEvents = convertObjToArrayEvents(LogsReaderEvents);
