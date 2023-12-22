@@ -16,10 +16,11 @@ Main differences:
 
 SquadJS can be configured using a JSON configuration file
 Take a look at [config.example.json](./config.example.json)
+Create a `config.json` file in the main folder.
+
+**NOTE - ftp works using the SFTP protocol**
 
 #### Local Configuration
-
-Create a `config.json` file in the main folder
 
 ```json
 {
@@ -37,8 +38,6 @@ Create a `config.json` file in the main folder
 ```
 
 #### Remote Configuration
-
-**NOTE - ftp works using the SFTP protocol**
 
 ```json
 {
