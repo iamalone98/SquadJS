@@ -1,6 +1,6 @@
 ## **SquadJS**
 
-This is a slightly improved version of SquadJS
+This is a slightly improved version of [SquadJS](https://github.com/Team-Silver-Sphere/SquadJS)
 
 Main differences:
 `Initializing multiple servers`

@@ -8,6 +8,8 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationDir": "lib/types",
   },
   "ts-node": {
     "esm": true,
