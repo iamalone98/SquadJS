@@ -49,9 +49,9 @@ export const chatCommands = (state: TState) => {
     adminForceTeamChange(execute, data.steamID);
   };
 
-  listener.on(EVENTS.CHAT_COMMANDS_ADMINS, admins);
-  listener.on(EVENTS.CHAT_COMMANDS_REPORT, report);
-  listener.on(EVENTS.CHAT_COMMANDS_R, report);
-  listener.on(EVENTS.CHAT_COMMANDS_STVOL, stvol);
-  listener.on(EVENTS.CHAT_COMMANDS_FIX, fix);
+  listener.on(EVENTS.CHAT_COMMAND_ADMINS, admins);
+  listener.on(EVENTS.CHAT_COMMAND_REPORT, report);
+  listener.on(EVENTS.CHAT_COMMAND_R, report);
+  listener.on(EVENTS.CHAT_COMMAND_STVOL, stvol);
+  listener.on(EVENTS.CHAT_COMMAND_FIX, fix);
 };

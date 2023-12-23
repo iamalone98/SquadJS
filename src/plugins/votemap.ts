@@ -144,7 +144,7 @@ export const voteMap = (state: TState) => {
     };
   };
 
-  listener.on(EVENTS.CHAT_COMMANDS_VOTEMAP, chatCommand);
+  listener.on(EVENTS.CHAT_COMMAND_VOTEMAP, chatCommand);
   listener.on(EVENTS.CHAT_MESSAGE, chatMessage);
   listener.on(EVENTS.NEW_GAME, newGame);
 

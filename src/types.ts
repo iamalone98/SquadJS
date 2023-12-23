@@ -22,6 +22,7 @@ export type TConfig = {
 
 export type TServersState = {
   [key in number]: {
+    id: number;
     rcon: TRcon;
     logs: TLogs;
     logger: TLogger;

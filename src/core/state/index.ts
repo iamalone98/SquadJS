@@ -1,6 +1,7 @@
-import { EVENTS, UPDATE_TIMEOUT } from '../../constants';
+import { UPDATE_TIMEOUT } from '../../constants';
 import { getServersState } from '../../serversState';
 import { TGetAdmins } from '../../types';
+import { EVENTS } from './../../constants';
 import { updateAdmins } from './updateAdmins';
 import { updateCurrentMap } from './updateCurrentMap';
 import { updateNextMap } from './updateNextMap';

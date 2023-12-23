@@ -37,7 +37,7 @@ export const getConfigs = (): TConfig[] | null => {
       }
 
     return {
-      id: key,
+      id: parseInt(key, 10),
       ...config[key],
     };
   });
