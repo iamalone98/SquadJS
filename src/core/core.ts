@@ -24,6 +24,7 @@ export const initSquadJS = async ({
   const maps = await initMaps(mapsName, mapsRegExp, logger);
 
   serversState[id] = {
+    id,
     rcon,
     logs,
     listener: localEmitter,
