@@ -1,7 +1,10 @@
 export {
   adminBroadcast,
   adminChangeLayer,
+  adminDisbandSquad,
   adminEndMatch,
+  adminForceTeamChange,
+  adminKick,
   adminSetNextLayer,
   adminWarn,
 } from './commands';

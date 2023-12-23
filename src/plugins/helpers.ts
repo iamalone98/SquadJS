@@ -12,9 +12,11 @@ export const getPlayerByName = (state: TState, name: string) =>
 export const getSquadByID = (state: TState, squadID: string) =>
   state.squads?.find((squad) => squad.squadID === squadID) || null;
 
-export const getAdmins = (state: TState) =>
+export const getAdmins = (state: TState, adminPermission: string) =>
   state.admins
-    ? Object.keys(state.admins).filter((admin) => state.admins?.[admin]['ban'])
+    ? Object.keys(state.admins).filter(
+        (admin) => state.admins?.[admin][adminPermission],
+      )
     : null;
 
 export const getVips = (state: TState) =>
@@ -23,3 +25,5 @@ export const getVips = (state: TState) =>
         (admin) => state.admins?.[admin]['reserved'],
       )
     : null;
+
+export const getPlayers = (state: TState) => state.players;

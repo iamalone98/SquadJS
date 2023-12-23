@@ -1,9 +1,9 @@
 import { TChatMessage } from 'squad-rcon';
 import { EVENTS } from '../constants';
-import { adminBroadcast, adminEndMatch, adminWarn } from '../core';
+import { adminBroadcast, adminSetNextLayer, adminWarn } from '../core';
 import { TState } from '../types';
 
-export const skipmap = (state: TState) => {
+export const voteMap = (state: TState) => {
   const { listener, execute } = state;
   const voteTick = 30000;
   const voteDuration = 120000;
@@ -20,27 +20,51 @@ export const skipmap = (state: TState) => {
   };
 
   const chatCommand = (data: TChatMessage) => {
-    const { steamID } = data;
-
+    console.log(data);
+    const { steamID, message } = data;
+    console.log(data);
     if (state.votingActive || voteStarting) {
       adminWarn(execute, steamID, 'В данный момент голосование уже идет!');
 
       return;
     }
 
-    if (!voteReadyToStart) {
+    // if (!voteReadyToStart) {
+    //   adminWarn(
+    //     execute,
+    //     steamID,
+    //     'Голосование будет доступно через 1 минуту после старта карты!',
+    //   );
+
+    //   return;
+    // }
+
+    const layersToLowerCase = new Set(
+      Object.keys(state.maps).map((map) => map.toLowerCase()),
+    );
+    const messageToLower = message.toLowerCase().trim().split(' ').join('_');
+
+    let foundMap = false;
+
+    layersToLowerCase.forEach((e) => {
+      if (e.includes(messageToLower)) {
+        foundMap = true;
+        return;
+      }
+    });
+
+    if (!foundMap) {
       adminWarn(
         execute,
         steamID,
-        'Голосование за завершение матча будет доступно через 1 минуту после начала матча!',
+        'Неправильно указано название карты, список карт можно найти в дискорд канале discord.gg/rn-server плагины!',
       );
-
       return;
     }
 
     adminBroadcast(
       execute,
-      'Голосование за пропуск текущей карты!\nИспользуйте +(За) -(Против) для голосования',
+      `Голосование за следующую карту ${message}!\nИспользуйте +(За) -(Против) для голосования`,
     );
 
     timer = setInterval(() => {
@@ -48,21 +72,24 @@ export const skipmap = (state: TState) => {
       const positive = votes['+'].length;
       const negative = votes['-'].length;
       const currentVotes = positive - negative <= 0 ? 0 : positive - negative;
-      const needVotes = 15;
+      const needVotes = 1;
 
       voteStarting = true;
       state.votingActive = true;
 
       if (secondsToEnd <= 0) {
         if (currentVotes >= needVotes) {
-          adminBroadcast(execute, 'Голосование завершено!\nМатч завершается!');
+          adminBroadcast(
+            execute,
+            `Голосование завершено!\nСледующая карта ${message}!`,
+          );
           adminBroadcast(
             execute,
             `За: ${positive} Против: ${negative} Набрано: ${currentVotes} из ${needVotes} голос(ов)`,
           );
 
           reset();
-          adminEndMatch(execute);
+          adminSetNextLayer(execute, messageToLower);
 
           return;
         }
@@ -73,7 +100,7 @@ export const skipmap = (state: TState) => {
 
         adminBroadcast(
           execute,
-          'Голосование завершено!\nНе набрано необходимое количество голосов за пропуск текущей карты',
+          'Голосование завершено!\nНе набрано необходимое количество голосов',
         );
         adminBroadcast(
           execute,
@@ -84,7 +111,7 @@ export const skipmap = (state: TState) => {
       } else {
         adminBroadcast(
           execute,
-          `Голосование за пропуск текущей карты!\nЗа: ${positive} Против: ${negative} Набрано: ${currentVotes} из ${needVotes} голос(ов)`,
+          `Голосование за следующую карту ${message}!\nЗа: ${positive} Против: ${negative} Набрано: ${currentVotes} из ${needVotes} голос(ов)`,
         );
         adminBroadcast(execute, 'Используйте +(За) -(Против) для голосования');
       }
@@ -117,7 +144,7 @@ export const skipmap = (state: TState) => {
     };
   };
 
-  listener.on(EVENTS.CHAT_COMMANDS_SKIPMAP, chatCommand);
+  listener.on(EVENTS.CHAT_COMMANDS_VOTEMAP, chatCommand);
   listener.on(EVENTS.CHAT_MESSAGE, chatMessage);
   listener.on(EVENTS.NEW_GAME, newGame);
 

@@ -35,7 +35,8 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
     );
   };
 
-  for (const event in EVENTS) {
+  for (const key in EVENTS) {
+    const event = EVENTS[key as keyof typeof EVENTS];
     coreListener.on(event, async (data) => {
       if (event === EVENTS.PLAYER_CONNECTED || event === EVENTS.SQUAD_CREATED) {
         await updatesOnEvents();

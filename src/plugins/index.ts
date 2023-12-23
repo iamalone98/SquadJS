@@ -1,7 +1,20 @@
 import { getServersState } from '../serversState';
+import { autoKickUnassigned } from './auto-kick-unassigned';
+import { chatCommands } from './chat-commands';
+import { randomizerMaps } from './randomizer-maps';
 import { skipmap } from './skipmap';
-
-const plugins = [skipmap];
+import { squadLeaderRole } from './squad-leader-role';
+import { voteMap } from './votemap';
+import { warnPlayers } from './warn-players';
+const plugins = [
+  skipmap,
+  voteMap,
+  randomizerMaps,
+  warnPlayers,
+  squadLeaderRole,
+  autoKickUnassigned,
+  chatCommands,
+];
 
 export const initPlugins = async (id: number) => {
   const state = getServersState(id);
