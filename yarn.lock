@@ -1553,10 +1553,10 @@ slice-ansi@^7.0.0:
     ansi-styles "^6.2.1"
     is-fullwidth-code-point "^5.0.0"
 
-squad-logs@^1.0.21:
-  version "1.0.21"
-  resolved "https://registry.yarnpkg.com/squad-logs/-/squad-logs-1.0.21.tgz#cba270d20547468c757b4ab4e7766ecdd71c1619"
-  integrity sha512-/mWtdras5xwksW5w7hpXwiqv4SAyjVf2+CuaHfqFb0g0O26Y68gEtTfzgXwCHNVzYFhlOVIboPabeMJi4cvb/A==
+squad-logs@^1.0.22:
+  version "1.0.22"
+  resolved "https://registry.yarnpkg.com/squad-logs/-/squad-logs-1.0.22.tgz#2148ad3a21da01003127b2c1deab30fb519b6f22"
+  integrity sha512-ObD4WW3aa8dFqGEKZp2WcXxDNhp3kvmkPo7Y2Q7pGziAZjFCiXh29Ipeu/i57d95e8dSZq7KTn8ieJ5aF2hgUA==
   dependencies:
     chalk "^5.3.0"
     date-fns "^2.30.0"

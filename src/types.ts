@@ -45,8 +45,7 @@ export type TServersState = {
       level: string | null;
       layer: string | null;
     };
-    playersCount?: number; // TODO
-    tickRate?: string; // TODO
+    tickRate?: number; // TODO
   };
 };
 

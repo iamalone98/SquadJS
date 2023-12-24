@@ -1,3 +1,4 @@
+import { TTickRate } from 'squad-logs';
 import { UPDATE_TIMEOUT } from '../../constants';
 import { getServersState } from '../../serversState';
 import { TGetAdmins } from '../../types';
@@ -15,7 +16,8 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
   await updatePlayers(id);
   await updateSquads(id);
 
-  const { coreListener, listener } = getServersState(id);
+  const state = getServersState(id);
+  const { coreListener, listener } = state;
 
   let updateTimeout: NodeJS.Timeout;
   let canRunUpdateInterval = true;
@@ -47,6 +49,12 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
         await updateAdmins(id, getAdmins);
         await updateCurrentMap(id);
         await updateNextMap(id);
+      }
+
+      if (event === EVENTS.TICK_RATE) {
+        const tickRateData = data as TTickRate;
+
+        state.tickRate = tickRateData.tickRate;
       }
 
       listener.emit(event, data);
