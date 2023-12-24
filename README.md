@@ -32,7 +32,13 @@ Create a `config.json` file in the main folder.
     "adminsFilePath": "/SquadGame/ServerConfig/Admins.cfg",
     "mapsName": "vanilla.json",
     "mapsRegExp": "(?<layerName>[a-zA-Z]+)_(?<layerMode>.*)",
-    "plugins": ["skipmap"]
+    "plugins": [
+      {
+        "name": "skipmap",
+        "enabled": true,
+        "options": {}
+      }
+    ]
   }
 }
 ```
@@ -49,7 +55,13 @@ Create a `config.json` file in the main folder.
     "adminsFilePath": "/SquadGame/ServerConfig/Admins.cfg",
     "mapsName": "mee.json",
     "mapsRegExp": "([a-zA-Z]+)_(?<layerName>[a-zA-Z]+)_(?<layerMode>.*)",
-    "plugins": ["skipmap"],
+    "plugins": [
+      {
+        "name": "skipmap",
+        "enabled": true,
+        "options": {}
+      }
+    ],
     "ftp": {
       "username": "root",
       "password": "pass"
@@ -66,4 +78,4 @@ Create a `config.json` file in the main folder.
 - `adminsFilePath` - admins file path.
 - `mapsName` - file name for use maps.
 - `mapsRegExp` - regexp for parse maps.
-- `plugins` - list of plugins that are included.
+- `plugins` - see example.

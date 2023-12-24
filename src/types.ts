@@ -11,7 +11,7 @@ export type TConfig = {
   port: number;
   mapsName: string;
   mapsRegExp: string;
-  plugins: string[];
+  plugins: TPlugin[];
   adminsFilePath: string;
   logFilePath: string;
   ftp?: {
@@ -30,7 +30,7 @@ export type TServersState = {
     coreListener: EventEmitter;
     listener: EventEmitter;
     maps: TMaps;
-    plugins: string[];
+    plugins: TPlugin[];
     // boolean for check current voting in plugins
     // votemap or skipmap
     votingActive?: boolean;
@@ -55,6 +55,18 @@ export type TMaps = {
 
 export type TAdmin = {
   [key in string]: { [key in string]: boolean };
+};
+
+export type TPluginProps = (state: TState, options: TPluginOptions) => void;
+
+export type TPlugin = {
+  name: string;
+  enabled: boolean;
+  options: TPluginOptions;
+};
+
+export type TPluginOptions = {
+  [key in string]: string;
 };
 
 export type TPlayer = {
@@ -83,7 +95,7 @@ export type TSquadJS = {
   id: number;
   mapsName: string;
   mapsRegExp: string;
-  plugins: string[];
+  plugins: TPlugin[];
   rcon: TRcon;
   logs: TLogs;
 };
