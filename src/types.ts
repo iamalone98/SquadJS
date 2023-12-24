@@ -37,7 +37,6 @@ export type TServersState = {
     admins?: TAdmin;
     players?: TPlayer[];
     squads?: TSquad[];
-    playersCount?: number;
     currentMap?: {
       level: string | null;
       layer: string | null;
@@ -46,6 +45,7 @@ export type TServersState = {
       level: string | null;
       layer: string | null;
     };
+    playersCount?: number; // TODO
     tickRate?: string; // TODO
   };
 };
