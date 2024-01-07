@@ -36,7 +36,7 @@ const initial = async (id?: number) => {
           await state.rcon.close();
           await state.logs.close();
 
-          initial(id);
+          initial(err.id);
         } else {
           console.log(chalk.yellow(`[SquadJS]`), chalk.red(error));
         }
