@@ -17,7 +17,7 @@
   "dependencies": {
     "chalk": "^5.3.0",
     "date-fns": "^2.30.0",
-    "squad-logs": "^1.0.22",
+    "squad-logs": "^1.0.23",
     "squad-rcon": "^1.0.24"
   },
   "devDependencies": {
