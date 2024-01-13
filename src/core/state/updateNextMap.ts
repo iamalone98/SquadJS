@@ -9,7 +9,7 @@ export const updateNextMap = async (id: number) => {
 
   execute(EVENTS.SHOW_NEXT_MAP);
 
-  return new Promise((res, rej) => {
+  return new Promise((res) => {
     coreListener.once(EVENTS.SHOW_NEXT_MAP, (data: TMap) => {
       getServersState(id).nextMap = data;
 
@@ -17,9 +17,6 @@ export const updateNextMap = async (id: number) => {
       res(true);
     });
 
-    setTimeout(
-      () => rej({ id, message: 'Updating next map error' }),
-      UPDATERS_REJECT_TIMEOUT,
-    );
+    setTimeout(() => res(true), UPDATERS_REJECT_TIMEOUT);
   });
 };

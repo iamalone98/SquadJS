@@ -1,16 +1,13 @@
 import chalk from 'chalk';
 import { initServer, initSquadJS } from './core';
-import { getServersState } from './serversState';
 import { TError } from './types';
 import { getConfigs } from './utils';
 
-const initial = async (id?: number) => {
+const initial = async () => {
   const configs = getConfigs();
 
   if (configs?.length) {
     for (const config of configs) {
-      if (id && config.id !== id) continue;
-
       try {
         const [rcon, logs] = await initServer(config);
 
@@ -30,13 +27,6 @@ const initial = async (id?: number) => {
             chalk.yellow(`[SquadJS]`),
             chalk.red(`Server ${err.id} error: ${err.message}`),
           );
-
-          const state = getServersState(err.id);
-
-          await state.rcon.close();
-          await state.logs.close();
-
-          initial(err.id);
         } else {
           console.log(chalk.yellow(`[SquadJS]`), chalk.red(error));
         }

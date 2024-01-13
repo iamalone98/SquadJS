@@ -1,6 +1,5 @@
 import EventEmitter from 'events';
 import { LogsReader } from 'squad-logs';
-import { Rcon } from 'squad-rcon';
 import { initLogger } from './logger';
 import { getServersState } from './serversState';
 
@@ -140,7 +139,7 @@ export type TState = TGetServersState;
 
 export type TGetAdmins = LogsReader['getAdminsFile'];
 export type TLogger = ReturnType<typeof initLogger>;
-export type TExecute = ReturnType<typeof Rcon>['execute'];
+export type TExecute = (command: string) => Promise<string>;
 export type TGetServersState = ReturnType<typeof getServersState>;
 
 export type TRcon = {
