@@ -10,16 +10,15 @@ export declare const getServersState: (id: number) => {
         warn: (...text: string[]) => void;
         error: (...text: string[]) => void;
     };
-    execute: (command: string) => Promise<string>;
+    execute: import("./types").TExecute;
     coreListener: import("events");
     listener: import("events");
     maps: import("./types").TMaps;
-    plugins: string[];
+    plugins: import("./types").TPlugin[];
     votingActive?: boolean | undefined;
     admins?: import("./types").TAdmin | undefined;
     players?: import("./types").TPlayer[] | undefined;
     squads?: import("./types").TSquad[] | undefined;
-    playersCount?: number | undefined;
     currentMap?: {
         level: string | null;
         layer: string | null;
@@ -28,5 +27,5 @@ export declare const getServersState: (id: number) => {
         level: string | null;
         layer: string | null;
     } | undefined;
-    tickRate?: string | undefined;
+    tickRate?: number | undefined;
 };

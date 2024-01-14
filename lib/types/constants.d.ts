@@ -24,6 +24,7 @@ export declare const EVENTS: {
     ROUND_WINNER: string;
     SQUAD_CREATED: string;
     VEHICLE_DAMAGED: string;
+    TICK_RATE: string;
     CHAT_MESSAGE: string;
     POSSESSED_ADMIN_CAMERA: string;
     UNPOSSESSED_ADMIN_CAMERA: string;
