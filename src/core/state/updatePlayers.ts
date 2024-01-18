@@ -9,7 +9,7 @@ export const updatePlayers = async (id: number) => {
 
   execute(EVENTS.LIST_PLAYERS);
 
-  return new Promise((res, rej) => {
+  return new Promise((res) => {
     coreListener.once(EVENTS.LIST_PLAYERS, (data: TPlayer[]) => {
       const state = getServersState(id);
       state.players = data.map((player) => {
@@ -63,9 +63,6 @@ export const updatePlayers = async (id: number) => {
       res(true);
     });
 
-    setTimeout(
-      () => rej({ id, message: 'Updating players' }),
-      UPDATERS_REJECT_TIMEOUT,
-    );
+    setTimeout(() => res(true), UPDATERS_REJECT_TIMEOUT);
   });
 };

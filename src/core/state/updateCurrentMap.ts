@@ -9,7 +9,7 @@ export const updateCurrentMap = async (id: number) => {
 
   execute(EVENTS.SHOW_CURRENT_MAP);
 
-  return new Promise((res, rej) => {
+  return new Promise((res) => {
     coreListener.once(EVENTS.SHOW_CURRENT_MAP, (data: TMap) => {
       getServersState(id).currentMap = data;
 
@@ -17,9 +17,6 @@ export const updateCurrentMap = async (id: number) => {
       res(true);
     });
 
-    setTimeout(
-      () => rej({ id, message: 'Updating current map error' }),
-      UPDATERS_REJECT_TIMEOUT,
-    );
+    setTimeout(() => res(true), UPDATERS_REJECT_TIMEOUT);
   });
 };

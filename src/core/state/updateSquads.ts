@@ -9,7 +9,7 @@ export const updateSquads = async (id: number) => {
 
   execute(EVENTS.LIST_SQUADS);
 
-  return new Promise((res, rej) => {
+  return new Promise((res) => {
     coreListener.once(EVENTS.LIST_SQUADS, (data: TSquad[]) => {
       const state = getServersState(id);
       state.squads = [...data];
@@ -20,9 +20,6 @@ export const updateSquads = async (id: number) => {
       res(true);
     });
 
-    setTimeout(
-      () => rej({ id, message: 'Updating squads error' }),
-      UPDATERS_REJECT_TIMEOUT,
-    );
+    setTimeout(() => res(true), UPDATERS_REJECT_TIMEOUT);
   });
 };

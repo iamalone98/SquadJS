@@ -5,12 +5,11 @@ import { TConfig, TLogs, TRcon } from '../types';
 export const initServer = async (config: TConfig) => {
   const { id, host, port, password, ftp, logFilePath, adminsFilePath } = config;
 
-  const { rconEmitter, execute, close } = Rcon({
+  const rcon = new Rcon({
     id,
     host,
     port,
     password,
-    autoReconnect: false,
   });
 
   const logsReaderConfig = ftp
@@ -18,7 +17,7 @@ export const initServer = async (config: TConfig) => {
         id,
         host,
         adminsFilePath,
-        autoReconnect: false,
+        autoReconnect: true,
         filePath: logFilePath,
         username: ftp.username,
         password: ftp.password,
@@ -29,22 +28,36 @@ export const initServer = async (config: TConfig) => {
         filePath: logFilePath,
         adminsFilePath,
         readType: 'local',
-        autoReconnect: false,
+        autoReconnect: true,
       };
 
   const logsReader = new LogsReader(logsReaderConfig as TLogReaderOptions);
 
   return Promise.all([
-    new Promise<TRcon>((res) =>
-      rconEmitter.on('connected', () => res({ execute, rconEmitter, close })),
-    ),
-    new Promise<TLogs>(async (res) => {
-      await logsReader.init();
-      res({
-        logsEmitter: logsReader,
-        getAdmins: logsReader.getAdminsFile.bind(logsReader),
-        close: logsReader.close.bind(logsReader),
-      });
+    new Promise<TRcon>(async (res, rej) => {
+      try {
+        await rcon.init();
+
+        res({
+          rconEmitter: rcon,
+          close: rcon.close.bind(rcon),
+          execute: rcon.execute.bind(rcon),
+        });
+      } catch (error) {
+        rej(error);
+      }
+    }),
+    new Promise<TLogs>(async (res, rej) => {
+      try {
+        await logsReader.init();
+        res({
+          logsEmitter: logsReader,
+          getAdmins: logsReader.getAdminsFile.bind(logsReader),
+          close: logsReader.close.bind(logsReader),
+        });
+      } catch (error) {
+        rej(error);
+      }
     }),
   ]);
 };

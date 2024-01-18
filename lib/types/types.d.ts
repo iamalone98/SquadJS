@@ -1,7 +1,6 @@
 /// <reference types="node" />
 import EventEmitter from 'events';
 import { LogsReader } from 'squad-logs';
-import { Rcon } from 'squad-rcon';
 import { initLogger } from './logger';
 import { getServersState } from './serversState';
 export type TConfig = {
@@ -11,7 +10,7 @@ export type TConfig = {
     port: number;
     mapsName: string;
     mapsRegExp: string;
-    plugins: string[];
+    plugins: TPlugin[];
     adminsFilePath: string;
     logFilePath: string;
     ftp?: {
@@ -29,12 +28,11 @@ export type TServersState = {
         coreListener: EventEmitter;
         listener: EventEmitter;
         maps: TMaps;
-        plugins: string[];
+        plugins: TPlugin[];
         votingActive?: boolean;
         admins?: TAdmin;
         players?: TPlayer[];
         squads?: TSquad[];
-        playersCount?: number;
         currentMap?: {
             level: string | null;
             layer: string | null;
@@ -43,7 +41,7 @@ export type TServersState = {
             level: string | null;
             layer: string | null;
         };
-        tickRate?: string;
+        tickRate?: number;
     };
 };
 export type TMaps = {
@@ -56,6 +54,15 @@ export type TAdmin = {
     [key in string]: {
         [key in string]: boolean;
     };
+};
+export type TPluginProps = (state: TState, options: TPluginOptions) => void;
+export type TPlugin = {
+    name: string;
+    enabled: boolean;
+    options: TPluginOptions;
+};
+export type TPluginOptions = {
+    [key in string]: string;
 };
 export type TPlayer = {
     name: string;
@@ -81,7 +88,7 @@ export type TSquadJS = {
     id: number;
     mapsName: string;
     mapsRegExp: string;
-    plugins: string[];
+    plugins: TPlugin[];
     rcon: TRcon;
     logs: TLogs;
 };
@@ -118,7 +125,7 @@ export type TError = {
 export type TState = TGetServersState;
 export type TGetAdmins = LogsReader['getAdminsFile'];
 export type TLogger = ReturnType<typeof initLogger>;
-export type TExecute = ReturnType<typeof Rcon>['execute'];
+export type TExecute = (command: string) => Promise<string>;
 export type TGetServersState = ReturnType<typeof getServersState>;
 export type TRcon = {
     execute: TExecute;

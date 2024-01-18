@@ -30,6 +30,7 @@ export declare const EVENTS: {
     ROUND_WINNER: string;
     SQUAD_CREATED: string;
     VEHICLE_DAMAGED: string;
+    TICK_RATE: string;
     CHAT_MESSAGE: string;
     POSSESSED_ADMIN_CAMERA: string;
     UNPOSSESSED_ADMIN_CAMERA: string;
@@ -40,6 +41,7 @@ export declare const EVENTS: {
     LIST_SQUADS: string;
     SHOW_CURRENT_MAP: string;
     SHOW_NEXT_MAP: string;
+    SHOW_SERVER_INFO: string;
 };
 export declare const UPDATERS_REJECT_TIMEOUT = 10000;
 export declare const UPDATE_TIMEOUT = 30000;
