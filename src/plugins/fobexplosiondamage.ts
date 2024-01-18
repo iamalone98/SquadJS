@@ -1,10 +1,10 @@
 import { TDeployableDamaged } from 'squad-logs';
 import { EVENTS } from '../constants';
 import { adminKick } from '../core';
-import { TState } from '../types';
+import { TPluginProps } from '../types';
 import { getPlayerByName } from './helpers';
 
-export const fobExplosionDamage = (state: TState) => {
+export const fobExplosionDamage: TPluginProps = (state) => {
   const { listener, execute } = state;
   const deployableDamaged = (data: TDeployableDamaged) => {
     const { weapon, deployable, name } = data;

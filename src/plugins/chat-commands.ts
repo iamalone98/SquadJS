@@ -1,9 +1,9 @@
 import { TChatMessage } from 'squad-rcon';
 import { EVENTS } from '../constants';
 import { adminBroadcast, adminForceTeamChange, adminWarn } from '../core';
-import { TState } from '../types';
+import { TPluginProps } from '../types';
 
-export const chatCommands = (state: TState) => {
+export const chatCommands: TPluginProps = (state) => {
   const { listener, execute } = state;
   let players: string[] = [];
 

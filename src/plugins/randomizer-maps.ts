@@ -1,8 +1,8 @@
 import { EVENTS } from '../constants';
 import { adminSetNextLayer } from '../core';
-import { TState } from '../types';
+import { TPluginProps } from '../types';
 
-export const randomizerMaps = (state: TState) => {
+export const randomizerMaps: TPluginProps = (state) => {
   const { listener, execute, logger } = state;
   const layerNames = new Set(
     Object.values(state.maps).map((map) => map.layerName),
