@@ -4,7 +4,7 @@ import { EVENTS } from '../../constants';
 
 export const convertObjToArrayEvents = (events: {
   [key in string]: string;
-}) => Object.keys(events).map((event) => event);
+}) => Object.keys(events).map((event) => events[event]);
 
 export const chatCommandParser = (listener: EventEmitter) => {
   listener.on(EVENTS.CHAT_MESSAGE, (data: TChatMessage) => {

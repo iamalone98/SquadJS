@@ -1,0 +1,1 @@
+export { initEvents } from './events';

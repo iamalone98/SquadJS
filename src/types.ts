@@ -1,4 +1,5 @@
 import EventEmitter from 'events';
+import { LogsReader } from 'squad-logs';
 import { Rcon } from 'squad-rcon';
 import { initLogger } from './logger';
 import { getServersState } from './serversState';
@@ -9,10 +10,11 @@ export type TConfig = {
   password: string;
   port: number;
   mapsName: string;
-  pluginsEnabled: string[];
-  logFilePath?: string;
+  mapsRegExp: string;
+  plugins: string[];
+  adminsFilePath: string;
+  logFilePath: string;
   ftp?: {
-    logFilePath: string;
     username: string;
     password: string;
   };
@@ -20,16 +22,21 @@ export type TConfig = {
 
 export type TServersState = {
   [key in number]: {
+    id: number;
+    rcon: TRcon;
+    logs: TLogs;
     logger: TLogger;
     execute: TExecute;
+    coreListener: EventEmitter;
     listener: EventEmitter;
-    maps: string[];
+    maps: TMaps;
+    plugins: string[];
     // boolean for check current voting in plugins
     // votemap or skipmap
     votingActive?: boolean;
+    admins?: TAdmin;
     players?: TPlayer[];
     squads?: TSquad[];
-    playersCount?: number;
     currentMap?: {
       level: string | null;
       layer: string | null;
@@ -38,8 +45,17 @@ export type TServersState = {
       level: string | null;
       layer: string | null;
     };
-    tickRate?: string;
+    playersCount?: number; // TODO
+    tickRate?: string; // TODO
   };
+};
+
+export type TMaps = {
+  [key in string]: { layerName: string; layerMode: string };
+};
+
+export type TAdmin = {
+  [key in string]: { [key in string]: boolean };
 };
 
 export type TPlayer = {
@@ -66,10 +82,37 @@ export type TSquad = {
 
 export type TSquadJS = {
   id: number;
-  execute: TExecute;
   mapsName: string;
-  rconEmitter: EventEmitter;
-  logsEmitter: EventEmitter;
+  mapsRegExp: string;
+  plugins: string[];
+  rcon: TRcon;
+  logs: TLogs;
+};
+
+export type TPlayerTeamChanged = {
+  player: TPlayer;
+  oldTeamID: string;
+  newTeamID: string;
+};
+
+export type TPlayerSquadChanged = {
+  player: TPlayer;
+  oldSquadID?: string | null;
+  newSquadID?: string | null;
+};
+
+export type TPlayerLeaderChanged = {
+  player: TPlayer;
+  oldRole: string;
+  newRole: string;
+  isLeader: boolean;
+};
+
+export type TPlayerRoleChanged = {
+  player: TPlayer;
+  oldRole: string;
+  newRole: string;
+  isLeader: boolean;
 };
 
 export type TEvents = {
@@ -77,8 +120,25 @@ export type TEvents = {
   logsEmitter: EventEmitter;
 };
 
-export type TPlugin = TGetServersState;
+export type TError = {
+  id?: number;
+  message: string;
+};
 
+export type TState = TGetServersState;
+
+export type TGetAdmins = LogsReader['getAdminsFile'];
 export type TLogger = ReturnType<typeof initLogger>;
 export type TExecute = ReturnType<typeof Rcon>['execute'];
 export type TGetServersState = ReturnType<typeof getServersState>;
+
+export type TRcon = {
+  execute: TExecute;
+  rconEmitter: EventEmitter;
+  close: () => Promise<unknown>;
+};
+export type TLogs = {
+  logsEmitter: EventEmitter;
+  getAdmins: TGetAdmins;
+  close: () => Promise<void>;
+};

@@ -3,18 +3,24 @@
     "host": "127.0.0.1",
     "password": "password",
     "port": 21110,
-    "logFilePath": "SquadGame/Saved/Logs/SquadGame.log",
-    "mapsName": "vanilla.json"
+    "logFilePath": "/SquadGame/Saved/Logs/SquadGame.log",
+    "adminsFilePath": "/SquadGame/ServerConfig/Admins.cfg",
+    "mapsName": "vanilla.json",
+    "mapsRegExp": "(?<layerName>[a-zA-Z]+)_(?<layerMode>.*)",
+    "plugins": ["skipmap"]
   },
   "2": {
     "host": "127.0.0.1",
     "password": "pass",
     "port": 21110,
+    "logFilePath": "/SquadGame/Saved/Logs/SquadGame.log",
+    "adminsFilePath": "/SquadGame/ServerConfig/Admins.cfg",
+    "mapsName": "mee.json",
+    "mapsRegExp": "([a-zA-Z]+)_(?<layerName>[a-zA-Z]+)_(?<layerMode>.*)",
+    "plugins": ["skipmap"],
     "ftp": {
-      "logFilePath": "SquadGame/Saved/Logs/SquadGame.log",
       "username": "root",
       "password": "pass"
-    },
-    "mapsName": "vanilla.json"
+    }
   }
 }

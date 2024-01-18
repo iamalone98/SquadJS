@@ -1,29 +1,40 @@
 import { TChatMessage } from 'squad-rcon';
 import { EVENTS } from '../constants';
 import { adminBroadcast, adminEndMatch, adminWarn } from '../core';
-import { TPlugin } from '../types';
+import { TState } from '../types';
 
-export const skipmap = (state: TPlugin) => {
-  const { listener, execute } = state;
+export const skipmap = (state: TState) => {
+  const { listener, execute, admins } = state;
   const voteTick = 30000;
   const voteDuration = 120000;
-  const voteRepeatDelay = 60000 * 10;
-  let voteReadyToStart = false;
+  const voteRepeatDelay = 90000 * 10; //15 min
+  let voteReadyToStart = true;
   let voteStarting = false;
+  let voteStartingRepeat = true;
   let secondsToEnd = voteDuration / 1000;
   let timer: NodeJS.Timeout;
   let timerDelayStarting: NodeJS.Timeout;
   let timerDelayNextStart: NodeJS.Timeout;
+  const historyPlayers: string[] = [];
   let votes: { [key in string]: string[] } = {
     '+': [],
     '-': [],
   };
 
-  listener.on(EVENTS.CHAT_COMMANDS_SKIPMAP, (data: TChatMessage) => {
+  const chatCommand = (data: TChatMessage) => {
     const { steamID } = data;
-
     if (state.votingActive || voteStarting) {
       adminWarn(execute, steamID, 'В данный момент голосование уже идет!');
+
+      return;
+    }
+
+    if (!voteStartingRepeat) {
+      adminWarn(
+        execute,
+        steamID,
+        'Должно пройти 15 минут после последнего использования skipmap!',
+      );
 
       return;
     }
@@ -38,11 +49,28 @@ export const skipmap = (state: TPlugin) => {
       return;
     }
 
+    if (!admins?.[steamID]) {
+      adminWarn(execute, steamID, 'Команда доступна только Vip пользователям');
+      return;
+    }
+
+    if (historyPlayers.find((i) => i === steamID)) {
+      adminWarn(
+        execute,
+        steamID,
+        'Вы уже запускали голосование, для каждого игрока доступно только одно голосование за игру!',
+      );
+      return;
+    }
+
     adminBroadcast(
       execute,
       'Голосование за пропуск текущей карты!\nИспользуйте +(За) -(Против) для голосования',
     );
 
+    historyPlayers.push(steamID);
+    voteStarting = true;
+    voteStartingRepeat = false;
     timer = setInterval(() => {
       secondsToEnd = secondsToEnd - voteTick / 1000;
       const positive = votes['+'].length;
@@ -50,7 +78,6 @@ export const skipmap = (state: TPlugin) => {
       const currentVotes = positive - negative <= 0 ? 0 : positive - negative;
       const needVotes = 15;
 
-      voteStarting = true;
       state.votingActive = true;
 
       if (secondsToEnd <= 0) {
@@ -68,7 +95,7 @@ export const skipmap = (state: TPlugin) => {
         }
 
         timerDelayNextStart = setTimeout(() => {
-          voteStarting = false;
+          voteStartingRepeat = true;
         }, voteRepeatDelay);
 
         adminBroadcast(
@@ -89,9 +116,10 @@ export const skipmap = (state: TPlugin) => {
         adminBroadcast(execute, 'Используйте +(За) -(Против) для голосования');
       }
     }, voteTick);
-  });
+  };
 
-  listener.on(EVENTS.CHAT_MESSAGE, (data: TChatMessage) => {
+  const chatMessage = (data: TChatMessage) => {
+    if (!voteStarting) return;
     const { steamID } = data;
     const message = data.message.trim();
 
@@ -104,20 +132,28 @@ export const skipmap = (state: TPlugin) => {
 
       adminWarn(execute, steamID, 'Твой голос принят!');
     }
-  });
+  };
 
-  listener.on(EVENTS.NEW_GAME, () => {
-    reset();
+  const newGame = () => {
+    () => {
+      reset();
+      clearTimeout(timerDelayNextStart);
+      voteReadyToStart = false;
+      voteStartingRepeat = true;
+      timerDelayStarting = setTimeout(() => {
+        voteReadyToStart = true;
+      }, 60000);
+    };
+  };
 
-    timerDelayStarting = setTimeout(() => {
-      voteReadyToStart = true;
-    }, 60000);
-  });
+  listener.on(EVENTS.CHAT_COMMAND_SKIPMAP, chatCommand);
+  listener.on(EVENTS.CHAT_MESSAGE, chatMessage);
+  listener.on(EVENTS.NEW_GAME, newGame);
 
   const reset = () => {
-    clearTimeout(timerDelayNextStart);
     clearTimeout(timerDelayStarting);
     clearInterval(timer);
+    secondsToEnd = voteDuration / 1000;
     voteStarting = false;
     state.votingActive = false;
     votes = {

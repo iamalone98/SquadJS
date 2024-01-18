@@ -1,43 +1,50 @@
-import EventEmitter from 'events';
 import { LogsReader, TLogReaderOptions } from 'squad-logs';
 import { Rcon } from 'squad-rcon';
-import { TConfig, TExecute } from '../types';
+import { TConfig, TLogs, TRcon } from '../types';
 
-type TPromiseRcon = { execute: TExecute; rconEmitter: EventEmitter };
-type TPromiseLogs = { logsEmitter: EventEmitter };
+export const initServer = async (config: TConfig) => {
+  const { id, host, port, password, ftp, logFilePath, adminsFilePath } = config;
 
-export const initServer = (config: TConfig) => {
-  const { id, host, port, password, ftp, logFilePath } = config;
-
-  const { rconEmitter, execute } = Rcon({
+  const { rconEmitter, execute, close } = Rcon({
     id,
     host,
     port,
     password,
+    autoReconnect: false,
   });
 
   const logsReaderConfig = ftp
     ? {
         id,
         host,
-        remoteFilePath: ftp.logFilePath,
+        adminsFilePath,
+        autoReconnect: false,
+        filePath: logFilePath,
         username: ftp.username,
         password: ftp.password,
+        readType: 'remote',
       }
-    : { id, localFilePath: logFilePath };
+    : {
+        id,
+        filePath: logFilePath,
+        adminsFilePath,
+        readType: 'local',
+        autoReconnect: false,
+      };
 
-  const logsEmitter = LogsReader(
-    logsReaderConfig as TLogReaderOptions,
-  );
+  const logsReader = new LogsReader(logsReaderConfig as TLogReaderOptions);
 
   return Promise.all([
-    new Promise<TPromiseRcon>((res) =>
-      rconEmitter.on('connected', () =>
-        res({ execute, rconEmitter }),
-      ),
+    new Promise<TRcon>((res) =>
+      rconEmitter.on('connected', () => res({ execute, rconEmitter, close })),
     ),
-    new Promise<TPromiseLogs>((res) =>
-      logsEmitter.on('connected', () => res({ logsEmitter })),
-    ),
+    new Promise<TLogs>(async (res) => {
+      await logsReader.init();
+      res({
+        logsEmitter: logsReader,
+        getAdmins: logsReader.getAdminsFile.bind(logsReader),
+        close: logsReader.close.bind(logsReader),
+      });
+    }),
   ]);
 };

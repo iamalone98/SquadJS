@@ -1,17 +1,15 @@
 import EventEmitter from 'events';
 import { LogsReaderEvents } from 'squad-logs';
 import { RconEvents } from 'squad-rcon';
-import { EVENTS } from '../../constants';
 import { TEvents } from '../../types';
-import {
-  chatCommandParser,
-  convertObjToArrayEvents,
-} from './helpers';
+import { chatCommandParser, convertObjToArrayEvents } from './helpers';
 
 export const initEvents = ({ rconEmitter, logsEmitter }: TEvents) => {
-  const emitter = new EventEmitter();
+  const coreEmitter = new EventEmitter();
+  const localEmitter = new EventEmitter();
 
-  emitter.setMaxListeners(20);
+  coreEmitter.setMaxListeners(50);
+  localEmitter.setMaxListeners(50);
 
   const rconEvents = convertObjToArrayEvents(RconEvents);
   const logsEvents = convertObjToArrayEvents(LogsReaderEvents);
@@ -19,29 +17,19 @@ export const initEvents = ({ rconEmitter, logsEmitter }: TEvents) => {
   /* RCON EVENTS */
 
   rconEvents.forEach((event) => {
-    rconEmitter.on(event, (data) => emitter.emit(event, data));
+    // disabled dublicate, using only Logs SQUAD_CREATED
+    if (event !== RconEvents.SQUAD_CREATED) {
+      rconEmitter.on(event, (data) => coreEmitter.emit(event, data));
+    }
   });
-
-  rconEmitter.on(EVENTS.LIST_PLAYERS, (data) =>
-    emitter.emit(EVENTS.LIST_PLAYERS, data),
-  );
-  rconEmitter.on(EVENTS.LIST_SQUADS, (data) =>
-    emitter.emit(EVENTS.LIST_SQUADS, data),
-  );
-  rconEmitter.on(EVENTS.SHOW_CURRENT_MAP, (data) =>
-    emitter.emit(EVENTS.SHOW_CURRENT_MAP, data),
-  );
-  rconEmitter.on(EVENTS.SHOW_NEXT_MAP, (data) =>
-    emitter.emit(EVENTS.SHOW_NEXT_MAP, data),
-  );
 
   /* LOGS EVENTS */
 
   logsEvents.forEach((event) => {
-    logsEmitter.on(event, (data) => emitter.emit(event, data));
+    logsEmitter.on(event, (data) => coreEmitter.emit(event, data));
   });
 
-  chatCommandParser(emitter);
+  chatCommandParser(coreEmitter);
 
-  return emitter;
+  return { coreEmitter, localEmitter };
 };

@@ -8,11 +8,13 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationDir": "lib/types",
   },
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node",
   },
-  "include": ["src/**/*.ts", "squad.config.js"],
+  "include": ["src/**/*.ts"],
   "exclude": ["./node_modules"]
 }

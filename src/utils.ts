@@ -17,19 +17,27 @@ export const getConfigs = (): TConfig[] | null => {
   const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
 
   return Object.keys(config).map((key) => {
-    const { host, password, port, mapsName, logFilePath, ftp } = config[key];
+    for (const option of [
+      'host',
+      'password',
+      'port',
+      'logFilePath',
+      'adminsFilePath',
+      'mapsName',
+      'mapsRegExp',
+      'plugins',
+    ])
+      if (!(option in config[key])) {
+        console.log(
+          chalk.yellow(`[SquadJS]`),
+          chalk.red(`${option} required!`),
+        );
 
-    if (!host || !password || !port || !mapsName || (!logFilePath && !ftp)) {
-      console.log(
-        chalk.yellow(`[SquadJS]`),
-        chalk.red('Missed required params!'),
-      );
-
-      process.exit(1);
-    }
+        process.exit(1);
+      }
 
     return {
-      id: key,
+      id: parseInt(key, 10),
       ...config[key],
     };
   });

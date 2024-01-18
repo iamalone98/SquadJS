@@ -6,19 +6,35 @@ import { initEvents } from './events';
 import { initMaps } from './maps';
 import { initState } from './state';
 
-export const SquadJS = async ({
+export const initSquadJS = async ({
   id,
-  execute,
   mapsName,
-  rconEmitter,
-  logsEmitter,
+  mapsRegExp,
+  plugins,
+  rcon,
+  logs,
 }: TSquadJS) => {
-  const listener = initEvents({ rconEmitter, logsEmitter });
+  const { rconEmitter, execute } = rcon;
+  const { logsEmitter, getAdmins } = logs;
+  const { localEmitter, coreEmitter } = initEvents({
+    rconEmitter,
+    logsEmitter,
+  });
   const logger = initLogger(id, true);
-  const maps = await initMaps(mapsName, logger);
+  const maps = await initMaps(mapsName, mapsRegExp, logger);
 
-  serversState[id] = { listener, execute, logger, maps };
+  serversState[id] = {
+    id,
+    rcon,
+    logs,
+    listener: localEmitter,
+    coreListener: coreEmitter,
+    execute,
+    logger,
+    maps,
+    plugins,
+  };
 
-  await initState(id);
+  await initState(id, getAdmins);
   await initPlugins(id);
 };
