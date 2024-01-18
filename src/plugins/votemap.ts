@@ -1,9 +1,9 @@
 import { TChatMessage } from 'squad-rcon';
 import { EVENTS } from '../constants';
 import { adminBroadcast, adminSetNextLayer, adminWarn } from '../core';
-import { TState } from '../types';
+import { TPluginProps } from '../types';
 
-export const voteMap = (state: TState) => {
+export const voteMap: TPluginProps = (state) => {
   const { listener, execute, admins } = state;
   const voteTick = 30000;
   const voteDuration = 180000;

@@ -1,10 +1,10 @@
 import { TPlayerDisconnected } from 'squad-logs';
 import { EVENTS } from '../constants';
 import { adminKick, adminWarn } from '../core';
-import { TPlayer, TState } from '../types';
+import { TPlayer, TPluginProps } from '../types';
 import { getAdmins, getPlayerByEOSID, getPlayers } from './helpers';
 
-export const autoKickUnassigned = (state: TState) => {
+export const autoKickUnassigned: TPluginProps = (state) => {
   const { listener, execute, logger } = state;
   const trackedPlayers: Record<string, TPlayer> = {};
   const kickTimeout = 300000;

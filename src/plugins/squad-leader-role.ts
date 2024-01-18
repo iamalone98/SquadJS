@@ -4,10 +4,10 @@ import {
   TPlayer,
   TPlayerLeaderChanged,
   TPlayerRoleChanged,
-  TState,
+  TPluginProps,
 } from '../types';
 
-export const squadLeaderRole = (state: TState) => {
+export const squadLeaderRole: TPluginProps = (state) => {
   const { listener, execute, logger } = state;
   const { currentMap, admins } = state;
   let trackedPlayers: Record<string, TPlayer> = {};

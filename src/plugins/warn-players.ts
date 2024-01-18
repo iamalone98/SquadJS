@@ -1,9 +1,9 @@
 import { TPlayerConnected, TPlayerWounded, TSquadCreated } from 'squad-logs';
 import { EVENTS } from '../constants';
 import { adminWarn } from '../core';
-import { TPlayerRoleChanged, TState } from '../types';
+import { TPlayerRoleChanged, TPluginProps } from '../types';
 
-export const warnPlayers = (state: TState) => {
+export const warnPlayers: TPluginProps = (state) => {
   const { listener, execute } = state;
   let warningTimeout: NodeJS.Timeout;
 
