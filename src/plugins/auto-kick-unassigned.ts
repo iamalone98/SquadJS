@@ -5,11 +5,11 @@ import { TPlayer, TState } from '../types';
 import { getAdmins, getPlayerByEOSID, getPlayers } from './helpers';
 
 export const autoKickUnassigned = (state: TState) => {
-  const { listener, execute } = state;
+  const { listener, execute, logger } = state;
   const trackedPlayers: Record<string, TPlayer> = {};
   const kickTimeout = 300000;
   const warningInterval = 30000;
-  const gracePeriod = 1000; //900000
+  const gracePeriod = 900000;
   let betweenRounds = false;
   const trackingListUpdateFrequency = 1 * 60 * 1000; // 1min
   //const cleanUpFrequency = 1 * 60 * 1000; // 1min
@@ -51,15 +51,14 @@ export const autoKickUnassigned = (state: TState) => {
     delete trackedPlayers[steamID];
     clearInterval((tracker as PlayerTracker).warnTimerID);
     clearTimeout((tracker as PlayerTracker).kickTimerID);
-    console.log(`unTracker: Name: ${tracker.name} Reason: ${reason || 'null'}`);
+    logger.log(`unTracker: Name: ${tracker.name} Reason: ${reason || 'null'}`);
   };
 
   const updateTrackingList = () => {
     const players = getPlayers(state);
     if (!players) return;
     const run = !(betweenRounds || players.length < playerThreshold);
-    console.log(
-      1,
+    logger.log(
       `Update Tracking List? ${run} (Between rounds: ${betweenRounds}, Below player threshold: ${
         players.length < playerThreshold
       })`,
@@ -83,11 +82,11 @@ export const autoKickUnassigned = (state: TState) => {
 
       if (!isUnassigned) continue;
 
-      if (isAdmin) console.log(1, `Admin is Unassigned: ${player.name}`);
+      if (isAdmin) logger.log(`Admin is Unassigned: ${player.name}`);
       if (isAdmin && ignoreWhitelist) continue;
 
       if (isWhitelist)
-        console.log(1, `Whitelist player is Unassigned: ${player.name}`);
+        logger.log(`Whitelist player is Unassigned: ${player.name}`);
       if (isWhitelist && ignoreWhitelist) continue;
 
       if (!isTracked) trackedPlayers[steamID] = trackPlayer(player);
@@ -127,7 +126,7 @@ export const autoKickUnassigned = (state: TState) => {
         steamID,
         `Вступите в отряд или будете кикнуты через - ${timeLeft}`,
       );
-      console.log(1, `Warning: ${player.name} (${timeLeft})`);
+      logger.log(`Warning: ${player.name} (${timeLeft})`);
       tracker.warnings++;
     }, warningInterval);
 
@@ -138,7 +137,7 @@ export const autoKickUnassigned = (state: TState) => {
 
       adminKick(execute, player.steamID, 'AFK');
 
-      console.log(1, `Kicked: ${player.name}`);
+      logger.log(`Kicked: ${player.name}`);
       untrackPlayer(tracker.steamID, 'Игрок кикнут');
     }, kickTimeout);
 

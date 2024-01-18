@@ -4,40 +4,58 @@ import { adminBroadcast, adminSetNextLayer, adminWarn } from '../core';
 import { TState } from '../types';
 
 export const voteMap = (state: TState) => {
-  const { listener, execute } = state;
+  const { listener, execute, admins } = state;
   const voteTick = 30000;
-  const voteDuration = 120000;
-  const voteRepeatDelay = 60000 * 10;
-  let voteReadyToStart = false;
+  const voteDuration = 180000;
+  let voteReadyToStart = true;
   let voteStarting = false;
   let secondsToEnd = voteDuration / 1000;
   let timer: NodeJS.Timeout;
   let timerDelayStarting: NodeJS.Timeout;
   let timerDelayNextStart: NodeJS.Timeout;
+  let vote = false;
+  let historyPlayers: string[] = [];
   let votes: { [key in string]: string[] } = {
     '+': [],
     '-': [],
   };
 
   const chatCommand = (data: TChatMessage) => {
-    console.log(data);
     const { steamID, message } = data;
-    console.log(data);
     if (state.votingActive || voteStarting) {
       adminWarn(execute, steamID, 'В данный момент голосование уже идет!');
 
       return;
     }
 
-    // if (!voteReadyToStart) {
-    //   adminWarn(
-    //     execute,
-    //     steamID,
-    //     'Голосование будет доступно через 1 минуту после старта карты!',
-    //   );
+    if (vote) {
+      adminWarn(execute, steamID, 'Голосование уже прошло!');
+      return;
+    }
 
-    //   return;
-    // }
+    if (!voteReadyToStart) {
+      adminWarn(
+        execute,
+        steamID,
+        'Голосование будет доступно через 1 минуту после старта карты!',
+      );
+
+      return;
+    }
+
+    if (!admins?.[steamID]) {
+      adminWarn(execute, steamID, 'Команда доступна только Vip пользователям');
+      return;
+    }
+
+    if (historyPlayers.find((i) => i === steamID)) {
+      adminWarn(
+        execute,
+        steamID,
+        'Вы уже запускали голосование, для каждого игрока доступно только одно голосование за игру!',
+      );
+      return;
+    }
 
     const layersToLowerCase = new Set(
       Object.keys(state.maps).map((map) => map.toLowerCase()),
@@ -53,7 +71,7 @@ export const voteMap = (state: TState) => {
       }
     });
 
-    if (!foundMap) {
+    if (!foundMap || message.length === 0) {
       adminWarn(
         execute,
         steamID,
@@ -67,16 +85,16 @@ export const voteMap = (state: TState) => {
       `Голосование за следующую карту ${message}!\nИспользуйте +(За) -(Против) для голосования`,
     );
 
+    voteStarting = true;
+    historyPlayers.push(steamID);
     timer = setInterval(() => {
       secondsToEnd = secondsToEnd - voteTick / 1000;
       const positive = votes['+'].length;
       const negative = votes['-'].length;
       const currentVotes = positive - negative <= 0 ? 0 : positive - negative;
-      const needVotes = 1;
+      const needVotes = 10;
 
-      voteStarting = true;
       state.votingActive = true;
-
       if (secondsToEnd <= 0) {
         if (currentVotes >= needVotes) {
           adminBroadcast(
@@ -90,13 +108,9 @@ export const voteMap = (state: TState) => {
 
           reset();
           adminSetNextLayer(execute, messageToLower);
-
+          vote = true;
           return;
         }
-
-        timerDelayNextStart = setTimeout(() => {
-          voteStarting = false;
-        }, voteRepeatDelay);
 
         adminBroadcast(
           execute,
@@ -137,7 +151,9 @@ export const voteMap = (state: TState) => {
   const newGame = () => {
     () => {
       reset();
-
+      vote = false;
+      voteReadyToStart = false;
+      historyPlayers = [];
       timerDelayStarting = setTimeout(() => {
         voteReadyToStart = true;
       }, 60000);
@@ -152,6 +168,7 @@ export const voteMap = (state: TState) => {
     clearTimeout(timerDelayNextStart);
     clearTimeout(timerDelayStarting);
     clearInterval(timer);
+    secondsToEnd = voteDuration / 1000;
     voteStarting = false;
     state.votingActive = false;
     votes = {

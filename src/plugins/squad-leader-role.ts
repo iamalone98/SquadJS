@@ -8,7 +8,7 @@ import {
 } from '../types';
 
 export const squadLeaderRole = (state: TState) => {
-  const { listener, execute } = state;
+  const { listener, execute, logger } = state;
   const { currentMap, admins } = state;
   let trackedPlayers: Record<string, TPlayer> = {};
 
@@ -34,7 +34,7 @@ export const squadLeaderRole = (state: TState) => {
     delete trackedPlayers[steamID];
 
     if (tracker) {
-      console.log(
+      logger.log(
         `unTracker: Name: ${tracker.name} SquadID: ${tracker.squadID} TeamID: ${
           tracker.teamID
         } Reason: ${reason || 'null'}`,
@@ -69,7 +69,7 @@ export const squadLeaderRole = (state: TState) => {
     if (isLeader) {
       if (!leaderRole) {
         await getWarn(player.steamID, messageGetRole, seconds);
-        console.log(
+        logger.log(
           `startTracker: Name: ${player.name} SquadID: ${player.squadID} TeamID: ${player.teamID} Seconds: ${seconds}`,
         );
 
@@ -111,7 +111,7 @@ export const squadLeaderRole = (state: TState) => {
 
           if (seconds !== 0) {
             await getWarn(updatedPlayer.steamID, messageGetRole, seconds);
-            console.log(
+            logger.log(
               `startTracker: Name: ${player.name} SquadID: ${player.squadID} TeamID: ${player.teamID} Seconds: ${seconds}`,
             );
           }

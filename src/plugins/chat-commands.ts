@@ -8,7 +8,6 @@ export const chatCommands = (state: TState) => {
   let players: string[] = [];
 
   const admins = (data: TChatMessage) => {
-    console.log(data);
     adminWarn(execute, data.steamID, 'На сервере присутствует администратор');
     adminWarn(
       execute,

@@ -7,6 +7,12 @@ export declare const EVENTS: {
     PLAYER_ROLE_CHANGED: string;
     PLAYER_LEADER_CHANGED: string;
     CHAT_COMMAND_SKIPMAP: string;
+    CHAT_COMMAND_VOTEMAP: string;
+    CHAT_COMMAND_ADMINS: string;
+    CHAT_COMMAND_REPORT: string;
+    CHAT_COMMAND_R: string;
+    CHAT_COMMAND_STVOL: string;
+    CHAT_COMMAND_FIX: string;
     ADMIN_BROADCAST: string;
     DEPLOYABLE_DAMAGED: string;
     NEW_GAME: string;

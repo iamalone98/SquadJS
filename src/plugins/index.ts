@@ -1,6 +1,7 @@
 import { getServersState } from '../serversState';
 import { autoKickUnassigned } from './auto-kick-unassigned';
 import { chatCommands } from './chat-commands';
+import { fobExplosionDamage } from './fobexplosiondamage';
 import { randomizerMaps } from './randomizer-maps';
 import { skipmap } from './skipmap';
 import { squadLeaderRole } from './squad-leader-role';
@@ -14,6 +15,7 @@ const plugins = [
   squadLeaderRole,
   autoKickUnassigned,
   chatCommands,
+  fobExplosionDamage,
 ];
 
 export const initPlugins = async (id: number) => {

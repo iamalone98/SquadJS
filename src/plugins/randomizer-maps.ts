@@ -3,7 +3,7 @@ import { adminSetNextLayer } from '../core';
 import { TState } from '../types';
 
 export const randomizerMaps = (state: TState) => {
-  const { listener, execute } = state;
+  const { listener, execute, logger } = state;
   const layerNames = new Set(
     Object.values(state.maps).map((map) => map.layerName),
   );
@@ -14,7 +14,7 @@ export const randomizerMaps = (state: TState) => {
   const newGame = () => {
     const map = recursiveGenerate();
     if (map) {
-      console.log(`Set next Layer ${map}`);
+      logger.log(`Set next Layer ${map}`);
       console.log(rnsHistoryLayers);
       adminSetNextLayer(execute, map);
     }
