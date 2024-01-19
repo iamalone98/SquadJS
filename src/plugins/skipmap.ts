@@ -135,15 +135,13 @@ export const skipmap: TPluginProps = (state) => {
   };
 
   const newGame = () => {
-    () => {
-      reset();
-      clearTimeout(timerDelayNextStart);
-      voteReadyToStart = false;
-      voteStartingRepeat = true;
-      timerDelayStarting = setTimeout(() => {
-        voteReadyToStart = true;
-      }, 60000);
-    };
+    reset();
+    clearTimeout(timerDelayNextStart);
+    voteReadyToStart = false;
+    voteStartingRepeat = true;
+    timerDelayStarting = setTimeout(() => {
+      voteReadyToStart = true;
+    }, 60000);
   };
 
   listener.on(EVENTS.CHAT_COMMAND_SKIPMAP, chatCommand);

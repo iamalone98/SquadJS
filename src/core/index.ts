@@ -5,6 +5,7 @@ export {
   adminEndMatch,
   adminForceTeamChange,
   adminKick,
+  adminKillServer,
   adminSetNextLayer,
   adminWarn,
 } from './commands';

@@ -1,2 +1,2 @@
-import { TState } from '../types';
-export declare const chatCommands: (state: TState) => void;
+import { TPluginProps } from '../types';
+export declare const chatCommands: TPluginProps;

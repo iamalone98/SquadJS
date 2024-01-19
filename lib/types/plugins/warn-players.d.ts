@@ -1,2 +1,2 @@
-import { TState } from '../types';
-export declare const warnPlayers: (state: TState) => void;
+import { TPluginProps } from '../types';
+export declare const warnPlayers: TPluginProps;

@@ -1,2 +1,2 @@
-import { TState } from '../types';
-export declare const randomizerMaps: (state: TState) => void;
+import { TPluginProps } from '../types';
+export declare const randomizerMaps: TPluginProps;

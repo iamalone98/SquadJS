@@ -7,3 +7,4 @@ export declare const adminDisbandSquad: (execute: TExecute, teamID: string, squa
 export declare const adminWarn: (execute: TExecute, steamID: string, reason: string) => Promise<void>;
 export declare const adminKick: (execute: TExecute, steamID: string, reason: string) => Promise<void>;
 export declare const adminForceTeamChange: (execute: TExecute, steamID: string) => Promise<void>;
+export declare const adminKillServer: (execute: TExecute) => Promise<void>;
