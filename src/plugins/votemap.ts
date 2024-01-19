@@ -27,7 +27,7 @@ export const voteMap: TPluginProps = (state) => {
 
       return;
     }
-
+    console.log(vote, 'votemap');
     if (vote) {
       adminWarn(execute, steamID, 'Голосование уже прошло!');
       return;
@@ -149,15 +149,14 @@ export const voteMap: TPluginProps = (state) => {
   };
 
   const newGame = () => {
-    () => {
-      reset();
-      vote = false;
-      voteReadyToStart = false;
-      historyPlayers = [];
-      timerDelayStarting = setTimeout(() => {
-        voteReadyToStart = true;
-      }, 60000);
-    };
+    reset();
+    vote = false;
+    console.log(vote, 'newgame');
+    voteReadyToStart = false;
+    historyPlayers = [];
+    timerDelayStarting = setTimeout(() => {
+      voteReadyToStart = true;
+    }, 60000);
   };
 
   listener.on(EVENTS.CHAT_COMMAND_VOTEMAP, chatCommand);

@@ -2,10 +2,13 @@ import { TPlayerConnected, TPlayerWounded, TSquadCreated } from 'squad-logs';
 import { EVENTS } from '../constants';
 import { adminWarn } from '../core';
 import { TPlayerRoleChanged, TPluginProps } from '../types';
+import { getPlayerByEOSID, getPlayerByName } from './helpers';
 
 export const warnPlayers: TPluginProps = (state) => {
   const { listener, execute } = state;
   let warningTimeout: NodeJS.Timeout;
+  const messageAttacker = 'Убил своего !!! Извинись в чате.';
+  const messageVictim = 'Вас убил союзный игрок.';
 
   const sendWarningMessages = (steamID: string, messages: string[]) => {
     for (const message of messages) {
@@ -71,8 +74,15 @@ export const warnPlayers: TPluginProps = (state) => {
     }
   };
 
-  const playerWounded = (data: TPlayerWounded) => {
-    if (data.victimName && data.attackerSteamID) {
+  const playerWounded = ({ victimName, attackerEOSID }: TPlayerWounded) => {
+    if (!victimName || !attackerEOSID) return;
+
+    const victim = getPlayerByName(state, victimName);
+    const attacker = getPlayerByEOSID(state, attackerEOSID);
+
+    if (victim && attacker && victim.teamID === attacker.teamID) {
+      adminWarn(execute, victim.steamID, messageVictim);
+      adminWarn(execute, attacker.steamID, messageAttacker);
     }
   };
 

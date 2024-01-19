@@ -1,5 +1,6 @@
 import { getServersState } from '../serversState';
 import { autoKickUnassigned } from './auto-kick-unassigned';
+import { autorestartServers } from './autorestart-servers';
 import { chatCommands } from './chat-commands';
 import { fobExplosionDamage } from './fobexplosiondamage';
 import { randomizerMaps } from './randomizer-maps';
@@ -16,6 +17,7 @@ const plugins = [
   autoKickUnassigned,
   chatCommands,
   fobExplosionDamage,
+  autorestartServers,
 ];
 
 export const initPlugins = async (id: number) => {
