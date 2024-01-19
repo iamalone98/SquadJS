@@ -18,6 +18,7 @@ export const autorestartServers: TPluginProps = (state) => {
       logger.log('Рестарт сервера...');
       adminKillServer(execute);
       isRestartTimeoutSet = false;
+      isTimeToRestart = false;
     }, 300000);
 
     isRestartTimeoutSet = true;
