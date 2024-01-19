@@ -82,7 +82,11 @@ export const warnPlayers: TPluginProps = (state) => {
 
     if (victim && attacker && victim.teamID === attacker.teamID) {
       adminWarn(execute, victim.steamID, messageVictim);
-      adminWarn(execute, attacker.steamID, messageAttacker);
+      adminWarn(
+        execute,
+        attacker.steamID,
+        messageAttacker + '\n' + attacker.name,
+      );
     }
   };
 
