@@ -15,7 +15,7 @@ export const skipmap: TPluginProps = (state) => {
   let timer: NodeJS.Timeout;
   let timerDelayStarting: NodeJS.Timeout;
   let timerDelayNextStart: NodeJS.Timeout;
-  const historyPlayers: string[] = [];
+  let historyPlayers: string[] = [];
   let votes: { [key in string]: string[] } = {
     '+': [],
     '-': [],
@@ -69,6 +69,7 @@ export const skipmap: TPluginProps = (state) => {
     );
 
     historyPlayers.push(steamID);
+    state.votingActive = true;
     voteStarting = true;
     voteStartingRepeat = false;
     timer = setInterval(() => {
@@ -77,8 +78,6 @@ export const skipmap: TPluginProps = (state) => {
       const negative = votes['-'].length;
       const currentVotes = positive - negative <= 0 ? 0 : positive - negative;
       const needVotes = 15;
-
-      state.votingActive = true;
 
       if (secondsToEnd <= 0) {
         if (currentVotes >= needVotes) {
@@ -137,6 +136,7 @@ export const skipmap: TPluginProps = (state) => {
   const newGame = () => {
     reset();
     clearTimeout(timerDelayNextStart);
+    historyPlayers = [];
     voteReadyToStart = false;
     voteStartingRepeat = true;
     timerDelayStarting = setTimeout(() => {
