@@ -86,6 +86,7 @@ export const voteMap: TPluginProps = (state) => {
     );
 
     voteStarting = true;
+    state.votingActive = true;
     historyPlayers.push(steamID);
     timer = setInterval(() => {
       secondsToEnd = secondsToEnd - voteTick / 1000;
@@ -94,7 +95,6 @@ export const voteMap: TPluginProps = (state) => {
       const currentVotes = positive - negative <= 0 ? 0 : positive - negative;
       const needVotes = 10;
 
-      state.votingActive = true;
       if (secondsToEnd <= 0) {
         if (currentVotes >= needVotes) {
           adminBroadcast(
