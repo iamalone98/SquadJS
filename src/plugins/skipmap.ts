@@ -4,7 +4,7 @@ import { adminBroadcast, adminEndMatch, adminWarn } from '../core';
 import { TPluginProps } from '../types';
 
 export const skipmap: TPluginProps = (state) => {
-  const { listener, execute, admins } = state;
+  const { listener, execute } = state;
   const voteTick = 30000;
   const voteDuration = 120000;
   const voteRepeatDelay = 90000 * 10; //15 min
@@ -23,6 +23,7 @@ export const skipmap: TPluginProps = (state) => {
 
   const chatCommand = (data: TChatMessage) => {
     const { steamID } = data;
+    const { admins } = state;
     if (state.votingActive || voteStarting) {
       adminWarn(execute, steamID, 'В данный момент голосование уже идет!');
 
