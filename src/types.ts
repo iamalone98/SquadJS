@@ -8,6 +8,7 @@ export type TConfig = {
   host: string;
   password: string;
   port: number;
+  db: string;
   mapsName: string;
   mapsRegExp: string;
   plugins: TPlugin[];
