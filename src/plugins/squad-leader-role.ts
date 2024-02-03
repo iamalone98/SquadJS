@@ -9,7 +9,6 @@ import {
 
 export const squadLeaderRole: TPluginProps = (state) => {
   const { listener, execute, logger } = state;
-  const { currentMap, admins } = state;
   let trackedPlayers: Record<string, TPlayer> = {};
 
   const getWarn = async (steamID: string, text: string, seconds?: number) => {
@@ -46,6 +45,7 @@ export const squadLeaderRole: TPluginProps = (state) => {
     data: TPlayerRoleChanged | TPlayerLeaderChanged,
   ) => {
     const { player, isLeader } = data;
+    const { currentMap, admins } = state;
     if (currentMap?.layer?.toLowerCase().includes('seed')) return;
     if (admins?.[player.steamID]?.ban) return;
     const timeDisband: number = 120000;
