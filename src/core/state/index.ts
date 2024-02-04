@@ -1,4 +1,4 @@
-import { TTickRate } from 'squad-logs';
+import { TPlayerDamaged, TPlayerPossess, TTickRate } from 'squad-logs';
 import { UPDATE_TIMEOUT } from '../../constants';
 import { getServersState } from '../../serversState';
 import { TGetAdmins } from '../../types';
@@ -55,6 +55,36 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
         const tickRateData = data as TTickRate;
 
         state.tickRate = tickRateData.tickRate;
+      }
+
+      if (event === EVENTS.PLAYER_POSSESS) {
+        const player = data as TPlayerPossess;
+        if (state.players && player) {
+          state.players = state.players?.map((p) => {
+            if (p.steamID === player.steamID) {
+              return {
+                ...p,
+                possess: player.possessClassname,
+              };
+            }
+            return p;
+          });
+        }
+      }
+
+      if (event === EVENTS.PLAYER_DAMAGED) {
+        const player = data as TPlayerDamaged;
+        if (state.players && player) {
+          state.players = state.players.map((p) => {
+            if (p.name === player.victimName) {
+              return {
+                ...p,
+                weapon: player.weapon,
+              };
+            }
+            return p;
+          });
+        }
       }
 
       listener.emit(event, data);

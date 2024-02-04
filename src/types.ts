@@ -76,6 +76,8 @@ export type TPlayer = {
   teamID: string;
   role: string;
   isLeader: boolean;
+  possess?: string;
+  weapon?: string;
   squadID?: string | null;
 };
 

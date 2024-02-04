@@ -2,6 +2,7 @@ import { TPlayerConnected } from 'squad-logs';
 import { EVENTS } from '../constants';
 import {
   createUserIfNullableOrUpdateName,
+  updatePossess,
   updateRoles,
   updateTimes,
   updateUserBonuses,
@@ -13,7 +14,10 @@ export const rnsStats: TPluginProps = (state) => {
   const { listener } = state;
   const classicBonus = 1;
   const seedBonus = 2;
-  const playersBonusesCurrentTime: any = [];
+  let playersBonusesCurrentTime: Array<{
+    steamID: string;
+    timer: NodeJS.Timeout;
+  }> = [];
   const playerConnected = (data: TPlayerConnected) => {
     const user = getPlayerByEOSID(state, data.eosID);
     if (!user) return;
@@ -43,12 +47,9 @@ export const rnsStats: TPluginProps = (state) => {
             await updateUserBonuses(steamID, classicBonus);
           }
 
-          // if (user && user.possessClassname) {
-          //   await this.server.rnsdb.updatePossess(
-          //     steamID,
-          //     user.possessClassname,
-          //   );
-          // }
+          if (user && user.possess) {
+            await updatePossess(steamID, user.possess);
+          }
 
           if (user && user.role) {
             await updateRoles(steamID, user.role);
@@ -70,43 +71,45 @@ export const rnsStats: TPluginProps = (state) => {
         }, 60000),
       });
     });
+
+    playersBonusesCurrentTime = playersBonusesCurrentTime.filter((e) => {
+      const currentUser = players.find((c) => c.steamID === e.steamID);
+
+      if (!currentUser) {
+        clearInterval(e.timer);
+
+        return false;
+      }
+
+      return e;
+    });
   };
 
-  // const onKill = () => {
-  //   setTimeout(async (info) => {
-  //     const { attacker } = info;
-  //     const victim = await this.server.getPlayerByName(info.victim.name);
+  // const onDied = (data: TPlayerDied) => {
+  //   const { currentMap } = state;
+  //   const { attackerSteamID, victimName } = data;
+  //   const victim = getPlayerByName(state, victimName);
 
-  //     const layer = await this.getLayer();
-
-  //     if (!attacker || !victim) return;
-  //     if (
-  //       layer.toLowerCase().includes('seed') ||
-  //       layer.toLowerCase().includes('seeding')
-  //     )
-  //       return;
-  //     if (!victim.weaponWound) {
-  //       const user = this.server.weapons.find(
-  //         (u) => u.name === info.victim.name,
-  //       );
-  //       this.server.rnsdb.updateUser(
-  //         info.attacker.steamID,
-  //         'kills',
-  //         user.weapon,
-  //       );
-  //       this.server.rnsdb.updateUser(victim.steamID, 'death');
-  //       return;
-  //     }
-  //     this.server.rnsdb.updateUser(
-  //       info.attacker.steamID,
-  //       'kills',
-  //       victim.weaponWound,
-  //     );
-  //     this.server.rnsdb.updateUser(victim.steamID, 'death');
-  //   }, 10000);
+  //   if (!attackerSteamID || !victim) return;
+  //   if (currentMap?.layer?.toLowerCase().includes('seed')) return;
+  //   // if (!victim.weapon) {
+  //   //   const user = this.server.weapons.find(
+  //   //     (u) => u.name === data.victim.name,
+  //   //   );
+  //   //   this.server.rnsdb.updateUser(
+  //   //     data.attacker.steamID,
+  //   //     'kills',
+  //   //     user.weapon,
+  //   //   );
+  //   //   this.server.rnsdb.updateUser(victim.steamID, 'death');
+  //   //   return;
+  //   // }
+  //   if (!victim.weapon) return;
+  //   updateUser(attackerSteamID, 'kills', victim.weapon);
+  //   updateUser(victim.steamID, 'death');
   // };
 
   listener.on(EVENTS.PLAYER_CONNECTED, playerConnected);
   listener.on(EVENTS.UPDATED_PLAYERS, updatedPlayers);
-  // listener.on(EVENTS.PLAYER_DIED, onKill);
+  // listener.on(EVENTS.PLAYER_DIED, onDied);
 };

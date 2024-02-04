@@ -129,7 +129,6 @@ export async function updateUserBonuses(steamID: string, count: number) {
     };
 
     await collectionMain.updateOne(user, doc);
-    await collectionTemp.updateOne(user, doc);
   } catch (err) {
     throw err;
   }
@@ -197,4 +196,107 @@ export async function updateTimes(steamID: string, field: string) {
   };
 
   await collectionMain.updateOne(user, doc);
+}
+
+export async function updatePossess(steamID: string, field: string) {
+  if (field.toLowerCase().includes('soldier')) return;
+  const possessFilter = `possess.${field}`;
+  const doc = {
+    $inc: {
+      [possessFilter]: 1,
+    },
+  };
+
+  const user = {
+    _id: steamID,
+  };
+
+  await collectionMain.updateOne(user, doc);
+}
+
+export async function getBonusesWithSteamID(steamID: string) {
+  const result = await collectionMain.findOne({
+    _id: steamID,
+  });
+
+  if (!result) return;
+
+  return result.bonuses;
+}
+
+export async function updateUser(
+  steamID: string,
+  field: string,
+  weapon: string,
+) {
+  if (!steamID || !field) return;
+  const doc = {
+    $inc: {
+      [field]: 1,
+    },
+  };
+
+  const user = {
+    _id: steamID,
+  };
+
+  await collectionMain.updateOne(user, doc);
+  await collectionTemp.updateOne(user, doc);
+
+  if (field === 'kills') {
+    const weaponFilter = `weapons.${weapon}`;
+    const doc = {
+      $inc: {
+        [weaponFilter]: 1,
+      },
+    };
+
+    const user = {
+      _id: steamID,
+    };
+    await collectionMain.updateOne(user, doc);
+    await collectionTemp.updateOne(user, doc);
+  }
+
+  if (field === 'kills' || field === 'death') {
+    const resultMain = await collectionMain.findOne({
+      _id: steamID,
+    });
+
+    const resultTemp = await collectionTemp.findOne({
+      _id: steamID,
+    });
+
+    if (resultMain) {
+      let kd;
+      if (resultMain.death && isFinite(resultMain.kills / resultMain.death)) {
+        kd = Number((resultMain.kills / resultMain.death).toFixed(2));
+      } else {
+        kd = resultMain.kills;
+      }
+
+      const doc = {
+        $set: {
+          kd: kd,
+        },
+      };
+      await collectionMain.updateOne(user, doc);
+    }
+
+    if (resultTemp) {
+      let kd;
+      if (resultTemp.death && isFinite(resultTemp.kills / resultTemp.death)) {
+        kd = Number((resultTemp.kills / resultTemp.death).toFixed(2));
+      } else {
+        kd = resultTemp.kills;
+      }
+
+      const doc = {
+        $set: {
+          kd: kd,
+        },
+      };
+      await collectionTemp.updateOne(user, doc);
+    }
+  }
 }

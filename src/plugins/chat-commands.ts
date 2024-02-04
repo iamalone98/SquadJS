@@ -1,6 +1,7 @@
 import { TChatMessage } from 'squad-rcon';
 import { EVENTS } from '../constants';
 import { adminBroadcast, adminForceTeamChange, adminWarn } from '../core';
+import { getBonusesWithSteamID } from '../rnsdb';
 import { TPluginProps } from '../types';
 
 export const chatCommands: TPluginProps = (state) => {
@@ -48,9 +49,29 @@ export const chatCommands: TPluginProps = (state) => {
     adminForceTeamChange(execute, data.steamID);
   };
 
+  const bonus = (data: TChatMessage) => {
+    const { steamID } = data;
+
+    const userBonuses = getBonusesWithSteamID(steamID);
+
+    adminWarn(execute, steamID, `У вас бонусов ${userBonuses || 0}`);
+    adminWarn(
+      execute,
+      steamID,
+      'За час игры 60 бонусов, на Seed картах 120 бонусов',
+    );
+    adminWarn(
+      execute,
+      steamID,
+      'Для получения Vip статуса !vip в дискорде discord.gg/rn-server в канале vip-за-бонусы',
+    );
+    adminWarn(execute, steamID, 'Стоимость Vip статуса равна 15 000 баллов');
+  };
+
   listener.on(EVENTS.CHAT_COMMAND_ADMINS, admins);
   listener.on(EVENTS.CHAT_COMMAND_REPORT, report);
   listener.on(EVENTS.CHAT_COMMAND_R, report);
   listener.on(EVENTS.CHAT_COMMAND_STVOL, stvol);
   listener.on(EVENTS.CHAT_COMMAND_FIX, fix);
+  listener.on(EVENTS.CHAT_COMMAND_BONUS, bonus);
 };
