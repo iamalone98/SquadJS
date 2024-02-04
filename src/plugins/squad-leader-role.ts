@@ -47,7 +47,7 @@ export const squadLeaderRole: TPluginProps = (state) => {
     const { player, isLeader } = data;
     const { currentMap, admins } = state;
     if (currentMap?.layer?.toLowerCase().includes('seed')) return;
-    if (admins?.[player.steamID]?.ban) return;
+    //if (admins?.[player.steamID]?.ban) return;
     const timeDisband: number = 120000;
     const iterationCheck: number = 30000;
     const messageGetRole: string =
