@@ -6,6 +6,7 @@ import {
   TPlayerRoleChanged,
   TPluginProps,
 } from '../types';
+import { getAdmins } from './helpers';
 
 export const squadLeaderRole: TPluginProps = (state) => {
   const { listener, execute, logger } = state;
@@ -45,9 +46,11 @@ export const squadLeaderRole: TPluginProps = (state) => {
     data: TPlayerRoleChanged | TPlayerLeaderChanged,
   ) => {
     const { player, isLeader } = data;
-    const { currentMap, admins } = state;
+    const { currentMap } = state;
+    const admins = getAdmins(state, 'canseeadminchat');
+    const isAdmin = admins?.includes(player.steamID);
     if (currentMap?.layer?.toLowerCase().includes('seed')) return;
-    //if (admins?.[player.steamID]?.ban) return;
+    if (isAdmin) return;
     const timeDisband: number = 120000;
     const iterationCheck: number = 30000;
     const messageGetRole: string =

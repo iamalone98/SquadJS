@@ -14,7 +14,6 @@ export const autoKickUnassigned: TPluginProps = (state) => {
   const trackingListUpdateFrequency = 1 * 60 * 1000; // 1min
   //const cleanUpFrequency = 1 * 60 * 1000; // 1min
   const playerThreshold = 1;
-  const admins = getAdmins(state, 'canseeadminchat');
   const whitelist = getAdmins(state, 'cameraman');
   const ignoreWhitelist = true;
 
@@ -55,7 +54,8 @@ export const autoKickUnassigned: TPluginProps = (state) => {
   };
 
   const updateTrackingList = () => {
-    const { currentMap, admins } = state;
+    const { currentMap } = state;
+    const admins = getAdmins(state, 'canseeadminchat');
     if (currentMap?.layer?.toLowerCase().includes('seed')) return;
     const players = getPlayers(state);
     if (!players) return;
