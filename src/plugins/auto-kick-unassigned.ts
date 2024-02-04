@@ -55,7 +55,7 @@ export const autoKickUnassigned: TPluginProps = (state) => {
   };
 
   const updateTrackingList = () => {
-    const { currentMap } = state;
+    const { currentMap, admins } = state;
     if (currentMap?.layer?.toLowerCase().includes('seed')) return;
     const players = getPlayers(state);
     if (!players) return;
