@@ -78,7 +78,7 @@ export const skipmap: TPluginProps = (state) => {
       const positive = votes['+'].length;
       const negative = votes['-'].length;
       const currentVotes = positive - negative <= 0 ? 0 : positive - negative;
-      const needVotes = 1;
+      const needVotes = 15;
 
       if (secondsToEnd <= 0) {
         if (currentVotes >= needVotes) {
