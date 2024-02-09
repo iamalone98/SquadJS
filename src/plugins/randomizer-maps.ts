@@ -1,5 +1,10 @@
 import { EVENTS } from '../constants';
 import { adminSetNextLayer } from '../core';
+import {
+  cleanHistoryLayers,
+  getHistoryLayers,
+  serverHistoryLayers,
+} from '../rnsdb';
 import { TPluginProps } from '../types';
 
 export const randomizerMaps: TPluginProps = (state) => {
@@ -11,18 +16,31 @@ export const randomizerMaps: TPluginProps = (state) => {
   const historyLayersMax = layerNames.size;
   let rnsHistoryLayers: string[] = [];
 
-  const newGame = () => {
-    const map = recursiveGenerate();
+  const newGame = async () => {
+    const { currentMap, id } = state;
+    if (!currentMap?.level) return;
+    console.log(currentMap.layer);
+    rnsHistoryLayers = await getHistoryLayers(id);
+    if (!rnsHistoryLayers.find((e) => e === currentMap.layer)) {
+      await serverHistoryLayers(id, currentMap.level);
+      rnsHistoryLayers.push(currentMap.level);
+    }
+
+    const map = await recursiveGenerate();
     if (map) {
       logger.log(`Set next Layer ${map}`);
-      adminSetNextLayer(execute, map);
+      console.log(rnsHistoryLayers);
+      await adminSetNextLayer(execute, map);
     }
   };
 
   listener.on(EVENTS.NEW_GAME, newGame);
 
-  const recursiveGenerate = (): string => {
-    const { currentMap } = state;
+  const recursiveGenerate = async (): Promise<string> => {
+    const { id } = state;
+    if (rnsHistoryLayers.length >= historyLayersMax) {
+      await cleanHistoryLayers(id, rnsHistoryLayers[historyLayersMax - 1]);
+    }
 
     if (rnsHistoryLayers.length >= historyLayersMax) {
       rnsHistoryLayers = rnsHistoryLayers.slice(-1);
@@ -30,13 +48,9 @@ export const randomizerMaps: TPluginProps = (state) => {
     }
 
     const layer = getRandomLayer();
+    console.log(layer);
     if (!rnsHistoryLayers.find((e) => e === layer.layer)) {
-      if (layer.layer === currentMap?.layer) {
-        rnsHistoryLayers.push(layer.layer);
-        return recursiveGenerate();
-      }
-
-      rnsHistoryLayers.push(layer.layer);
+      await serverHistoryLayers(id, layer.layer);
       return layer.map;
     }
 

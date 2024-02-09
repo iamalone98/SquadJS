@@ -23,12 +23,19 @@ interface Main {
   weapons: object;
 }
 
+interface Info {
+  _id: string;
+  rnsHistoryLayers: string[];
+}
+
 let db: Db;
 const dbName = 'SquadJS';
 const dbCollectionMain = 'mainstats';
 const dbCollectionTemp = 'tempstats';
+const dbCollectionServerInfo = 'serverinfo';
 let collectionMain: Collection<Main>;
 let collectionTemp: Collection<Main>;
+let collectionServerInfo: Collection<Info>;
 
 export async function connectToDatabase(dbLink: string): Promise<void> {
   const client = new MongoClient(dbLink);
@@ -40,9 +47,9 @@ export async function connectToDatabase(dbLink: string): Promise<void> {
     db = client.db(dbName);
     collectionMain = db.collection(dbCollectionMain);
     collectionTemp = db.collection(dbCollectionTemp);
+    collectionServerInfo = db.collection(dbCollectionServerInfo);
   } catch (err) {
     console.error('Error connecting to MongoDB:', err);
-    throw err;
   }
 }
 
@@ -342,4 +349,44 @@ export async function updateGames(steamID: string, field: string) {
       await collectionMain.updateOne(user, doc);
     }
   }
+}
+
+export async function serverHistoryLayers(
+  serverID: number,
+  rnsHistoryLayers?: string,
+) {
+  if (!rnsHistoryLayers) return;
+  const server = await collectionServerInfo.findOne({
+    _id: serverID.toString(),
+  });
+  if (!server) return;
+
+  const data = {
+    $push: {
+      rnsHistoryLayers,
+    },
+  };
+  await collectionServerInfo.updateOne(server, data);
+}
+
+export async function getHistoryLayers(serverID: number) {
+  const result = await collectionServerInfo.findOne({
+    _id: serverID.toString(),
+  });
+  return result?.rnsHistoryLayers || [];
+}
+
+export async function cleanHistoryLayers(
+  serverID: number,
+  rnsHistoryLayers: string,
+) {
+  const result = await collectionServerInfo.findOne({
+    _id: serverID.toString(),
+  });
+  if (!result) return;
+  const data = {
+    $set: { rnsHistoryLayers: [rnsHistoryLayers] },
+  };
+
+  await collectionServerInfo.updateOne(result, data);
 }
