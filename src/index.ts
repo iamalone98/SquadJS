@@ -1,8 +1,8 @@
 import chalk from 'chalk';
 import { initServer, initSquadJS } from './core';
+import { connectToDatabase } from './rnsdb';
 import { TError } from './types';
 import { getConfigs } from './utils';
-
 const initial = async () => {
   const configs = getConfigs();
 
@@ -19,6 +19,8 @@ const initial = async () => {
           mapsRegExp: config.mapsRegExp,
           plugins: config.plugins,
         });
+
+        await connectToDatabase(config.db);
       } catch (error) {
         const err = error as TError;
 

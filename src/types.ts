@@ -8,6 +8,7 @@ export type TConfig = {
   host: string;
   password: string;
   port: number;
+  db: string;
   mapsName: string;
   mapsRegExp: string;
   plugins: TPlugin[];
@@ -33,6 +34,7 @@ export type TServersState = {
     // boolean for check current voting in plugins
     // votemap or skipmap
     votingActive?: boolean;
+    skipmap?: boolean;
     admins?: TAdmin;
     players?: TPlayer[];
     squads?: TSquad[];
@@ -75,6 +77,8 @@ export type TPlayer = {
   teamID: string;
   role: string;
   isLeader: boolean;
+  possess?: string;
+  weapon?: string;
   squadID?: string | null;
 };
 

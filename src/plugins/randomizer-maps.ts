@@ -15,7 +15,6 @@ export const randomizerMaps: TPluginProps = (state) => {
     const map = recursiveGenerate();
     if (map) {
       logger.log(`Set next Layer ${map}`);
-      console.log(rnsHistoryLayers);
       adminSetNextLayer(execute, map);
     }
   };
@@ -23,6 +22,8 @@ export const randomizerMaps: TPluginProps = (state) => {
   listener.on(EVENTS.NEW_GAME, newGame);
 
   const recursiveGenerate = (): string => {
+    const { currentMap } = state;
+
     if (rnsHistoryLayers.length >= historyLayersMax) {
       rnsHistoryLayers = rnsHistoryLayers.slice(-1);
       return recursiveGenerate();
@@ -30,6 +31,11 @@ export const randomizerMaps: TPluginProps = (state) => {
 
     const layer = getRandomLayer();
     if (!rnsHistoryLayers.find((e) => e === layer.layer)) {
+      if (layer.layer === currentMap?.layer) {
+        rnsHistoryLayers.push(layer.layer);
+        return recursiveGenerate();
+      }
+
       rnsHistoryLayers.push(layer.layer);
       return layer.map;
     }

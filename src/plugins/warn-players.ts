@@ -79,7 +79,7 @@ export const warnPlayers: TPluginProps = (state) => {
 
     const victim = getPlayerByName(state, victimName);
     const attacker = getPlayerByEOSID(state, attackerEOSID);
-
+    if (victim?.name === attacker?.name) return;
     if (victim && attacker && victim.teamID === attacker.teamID) {
       adminWarn(execute, victim.steamID, messageVictim + '\n' + attacker.name);
       adminWarn(execute, attacker.steamID, messageAttacker);

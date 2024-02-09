@@ -87,7 +87,7 @@ export const skipmap: TPluginProps = (state) => {
             execute,
             `За: ${positive} Против: ${negative} Набрано: ${currentVotes} из ${needVotes} голос(ов)`,
           );
-
+          state.skipmap = true;
           reset();
           adminEndMatch(execute);
 
@@ -140,6 +140,7 @@ export const skipmap: TPluginProps = (state) => {
     historyPlayers = [];
     voteReadyToStart = false;
     voteStartingRepeat = true;
+    state.skipmap = false;
     timerDelayStarting = setTimeout(() => {
       voteReadyToStart = true;
     }, 60000);
