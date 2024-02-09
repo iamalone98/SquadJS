@@ -1,23 +1,35 @@
-import { TPlayerConnected } from 'squad-logs';
+import {
+  TPlayerConnected,
+  TPlayerDied,
+  TPlayerRevived,
+  TRoundTickets,
+} from 'squad-logs';
 import { EVENTS } from '../constants';
+import { adminWarn } from '../core';
 import {
   createUserIfNullableOrUpdateName,
+  getUserDataWithSteamID,
+  updateGames,
   updatePossess,
   updateRoles,
   updateTimes,
-  updateUserBonuses,
+  updateUser,
 } from '../rnsdb';
 import { TPluginProps } from '../types';
-import { getPlayerByEOSID, getPlayerBySteamID, getSquadByID } from './helpers';
+import {
+  getPlayerByEOSID,
+  getPlayerByName,
+  getPlayerBySteamID,
+  getSquadByID,
+} from './helpers';
 
 export const rnsStats: TPluginProps = (state) => {
-  const { listener } = state;
-  const classicBonus = 1;
-  const seedBonus = 2;
-  let playersBonusesCurrentTime: Array<{
+  const { listener, execute } = state;
+  let playersCurrenTime: Array<{
     steamID: string;
     timer: NodeJS.Timeout;
   }> = [];
+  let winner: string;
   const playerConnected = (data: TPlayerConnected) => {
     const user = getPlayerByEOSID(state, data.eosID);
     if (!user) return;
@@ -25,27 +37,47 @@ export const rnsStats: TPluginProps = (state) => {
     createUserIfNullableOrUpdateName(steamID, name);
   };
 
+  const onRoundTickets = (data: TRoundTickets) => {
+    const { team, action } = data;
+    if (action === 'won') winner = team;
+  };
+
+  const onRoundEnded = async () => {
+    if (state.skipmap) return;
+    const { players } = state;
+    if (!players) return;
+    for (const player of players) {
+      const { teamID, steamID, possess } = player;
+      const user = await getUserDataWithSteamID(steamID);
+      if (user)
+        adminWarn(
+          execute,
+          steamID,
+          `Игрок: ${user.name}\nУбийств: ${user.kills}\nСмертей: ${user.death}\nПомощь: ${user.revives}\nТимкилы: ${user.teamkills}\nK/D: ${user.kd}
+        `,
+        );
+      if (possess?.toLowerCase().includes('developeradmincam')) return;
+      if (!winner) return;
+      if (teamID === winner) {
+        updateGames(steamID, 'won');
+      } else {
+        updateGames(steamID, 'lose');
+      }
+    }
+    winner = '';
+  };
+
   const updatedPlayers = () => {
-    const { players, currentMap } = state;
+    const { players } = state;
     if (!players) return;
     players.forEach((e) => {
       const { steamID } = e;
       if (!steamID) return;
-      if (
-        playersBonusesCurrentTime.find(
-          (e: { steamID: string }) => e.steamID === steamID,
-        )
-      )
-        return;
-      playersBonusesCurrentTime.push({
+      if (playersCurrenTime.find((e) => e.steamID === steamID)) return;
+      playersCurrenTime.push({
         steamID,
         timer: setInterval(async () => {
           const user = getPlayerBySteamID(state, steamID);
-          if (currentMap?.layer?.toLowerCase().includes('seed')) {
-            await updateUserBonuses(steamID, seedBonus);
-          } else {
-            await updateUserBonuses(steamID, classicBonus);
-          }
 
           if (user && user.possess) {
             await updatePossess(steamID, user.possess);
@@ -72,7 +104,7 @@ export const rnsStats: TPluginProps = (state) => {
       });
     });
 
-    playersBonusesCurrentTime = playersBonusesCurrentTime.filter((e) => {
+    playersCurrenTime = playersCurrenTime.filter((e) => {
       const currentUser = players.find((c) => c.steamID === e.steamID);
 
       if (!currentUser) {
@@ -85,31 +117,34 @@ export const rnsStats: TPluginProps = (state) => {
     });
   };
 
-  // const onDied = (data: TPlayerDied) => {
-  //   const { currentMap } = state;
-  //   const { attackerSteamID, victimName } = data;
-  //   const victim = getPlayerByName(state, victimName);
+  const onDied = (data: TPlayerDied) => {
+    const { currentMap } = state;
+    if (currentMap?.layer?.toLowerCase().includes('seed')) return;
+    const { attackerSteamID, victimName, attackerEOSID } = data;
+    const attacker = getPlayerByEOSID(state, attackerEOSID);
+    const victim = getPlayerByName(state, victimName);
 
-  //   if (!attackerSteamID || !victim) return;
-  //   if (currentMap?.layer?.toLowerCase().includes('seed')) return;
-  //   // if (!victim.weapon) {
-  //   //   const user = this.server.weapons.find(
-  //   //     (u) => u.name === data.victim.name,
-  //   //   );
-  //   //   this.server.rnsdb.updateUser(
-  //   //     data.attacker.steamID,
-  //   //     'kills',
-  //   //     user.weapon,
-  //   //   );
-  //   //   this.server.rnsdb.updateUser(victim.steamID, 'death');
-  //   //   return;
-  //   // }
-  //   if (!victim.weapon) return;
-  //   updateUser(attackerSteamID, 'kills', victim.weapon);
-  //   updateUser(victim.steamID, 'death');
-  // };
+    if (!victim) return;
+    if (attacker?.teamID === victim?.teamID && attacker.name !== victim.name) {
+      return updateUser(attackerSteamID, 'teamkills');
+    }
+    updateUser(attackerSteamID, 'kills', victim.weapon || '');
+    updateUser(victim.steamID, 'death');
+  };
+
+  const onRevived = (data: TPlayerRevived) => {
+    const { currentMap } = state;
+    if (currentMap?.layer?.toLowerCase().includes('seed')) return;
+
+    const { reviverSteamID } = data;
+
+    updateUser(reviverSteamID, 'revives');
+  };
 
   listener.on(EVENTS.PLAYER_CONNECTED, playerConnected);
   listener.on(EVENTS.UPDATED_PLAYERS, updatedPlayers);
-  // listener.on(EVENTS.PLAYER_DIED, onDied);
+  listener.on(EVENTS.PLAYER_DIED, onDied);
+  listener.on(EVENTS.PLAYER_REVIVED, onRevived);
+  listener.on(EVENTS.ROUND_ENDED, onRoundEnded);
+  listener.on(EVENTS.ROUND_TICKETS, onRoundTickets);
 };

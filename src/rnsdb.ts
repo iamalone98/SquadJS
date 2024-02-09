@@ -13,7 +13,13 @@ interface Main {
   possess: object;
   roles: object;
   squad: object;
-  matches: object;
+  matches: {
+    matches: number;
+    winrate: number;
+    won: number;
+    lose: number;
+    history: object;
+  };
   weapons: object;
 }
 
@@ -214,20 +220,20 @@ export async function updatePossess(steamID: string, field: string) {
   await collectionMain.updateOne(user, doc);
 }
 
-export async function getBonusesWithSteamID(steamID: string) {
+export async function getUserDataWithSteamID(steamID: string) {
   const result = await collectionMain.findOne({
     _id: steamID,
   });
 
   if (!result) return;
 
-  return result.bonuses;
+  return result;
 }
 
 export async function updateUser(
   steamID: string,
   field: string,
-  weapon: string,
+  weapon?: string,
 ) {
   if (!steamID || !field) return;
   const doc = {
@@ -297,6 +303,43 @@ export async function updateUser(
         },
       };
       await collectionTemp.updateOne(user, doc);
+    }
+  }
+}
+
+export async function updateGames(steamID: string, field: string) {
+  const matchesFilter = `matches.${field}`;
+  const doc = {
+    $inc: {
+      [matchesFilter]: 1,
+    },
+  };
+
+  const user = {
+    _id: steamID,
+  };
+
+  await collectionMain.updateOne(user, doc);
+  await collectionTemp.updateOne(user, doc);
+
+  if (field === 'won' || field === 'lose') {
+    const resultMain = await collectionMain.findOne({
+      _id: steamID,
+    });
+
+    const matchesMain =
+      (resultMain?.matches.won || 0) + (resultMain?.matches.lose || 0);
+
+    if (resultMain) {
+      const doc = {
+        $set: {
+          'matches.matches': matchesMain,
+          'matches.winrate': Number(
+            ((resultMain.matches.won / matchesMain) * 100).toFixed(3),
+          ),
+        },
+      };
+      await collectionMain.updateOne(user, doc);
     }
   }
 }

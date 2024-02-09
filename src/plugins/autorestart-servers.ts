@@ -5,11 +5,11 @@ import { TPluginProps } from '../types';
 export const autorestartServers: TPluginProps = (state) => {
   const { listener, execute, logger } = state;
   let isTimeToRestart = false;
-  let restartInterval = 24 * 60 * 60 * 1000; //24h
+  const restartInterval = 24 * 60 * 60 * 1000; //24h
   let restartTimeout: NodeJS.Timeout;
   let isRestartTimeoutSet = false;
 
-  const autoRestartInterval = setInterval(() => {
+  setInterval(() => {
     isTimeToRestart = true;
   }, restartInterval);
 

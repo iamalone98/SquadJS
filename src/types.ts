@@ -34,6 +34,7 @@ export type TServersState = {
     // boolean for check current voting in plugins
     // votemap or skipmap
     votingActive?: boolean;
+    skipmap?: boolean;
     admins?: TAdmin;
     players?: TPlayer[];
     squads?: TSquad[];

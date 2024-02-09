@@ -1,13 +1,13 @@
 import { TChatMessage } from 'squad-rcon';
 import { EVENTS } from '../constants';
 import { adminBroadcast, adminForceTeamChange, adminWarn } from '../core';
-import { getBonusesWithSteamID } from '../rnsdb';
+import { getUserDataWithSteamID } from '../rnsdb';
 import { TPluginProps } from '../types';
 
 export const chatCommands: TPluginProps = (state) => {
   const { listener, execute } = state;
   let players: string[] = [];
-
+  let timeoutPlayers: string[] = [];
   const admins = (data: TChatMessage) => {
     adminWarn(execute, data.steamID, 'На сервере присутствует администратор');
     adminWarn(
@@ -49,12 +49,65 @@ export const chatCommands: TPluginProps = (state) => {
     adminForceTeamChange(execute, data.steamID);
   };
 
-  const bonus = (data: TChatMessage) => {
+  const discord = (data: TChatMessage) => {
+    adminWarn(
+      execute,
+      data.steamID,
+      'Discord сервера - https://discord.gg/rn-server',
+    );
+    adminWarn(
+      execute,
+      data.steamID,
+      'Либо в дискорде "Добавить сервер -> rn-server"',
+    );
+  };
+
+  const stats = async (data: TChatMessage) => {
+    const { steamID, message } = data;
+    let user;
+    if (timeoutPlayers.find((p) => p === steamID)) {
+      adminWarn(execute, steamID, 'Разрешено использовать раз в 3 минуты!');
+      return;
+    }
+    if (message.length === 0) {
+      user = await getUserDataWithSteamID(steamID);
+    } else {
+      const { players } = state;
+      const getPlayer = players?.find((p) =>
+        p.name.trim().toLowerCase().includes(message.trim().toLowerCase()),
+      );
+      if (!getPlayer) {
+        adminWarn(
+          execute,
+          steamID,
+          'Имя указано неверно, либо игрок отсутствует на сервере!',
+        );
+      } else {
+        user = await getUserDataWithSteamID(getPlayer.steamID);
+      }
+    }
+    if (!user) return;
+    const { name, kills, death, revives, teamkills, kd } = user;
+
+    adminWarn(
+      execute,
+      steamID,
+      `Игрок: ${name}\nУбийств: ${kills}\nСмертей: ${death}\nПомощь: ${revives}\nТимкилы: ${teamkills}\nK/D: ${kd}
+       `,
+    );
+    timeoutPlayers.push(steamID);
+    setTimeout(() => {
+      timeoutPlayers = timeoutPlayers.filter((p) => p !== steamID);
+    }, 180000);
+  };
+
+  const bonus = async (data: TChatMessage) => {
     const { steamID } = data;
 
-    const userBonuses = getBonusesWithSteamID(steamID);
-
-    adminWarn(execute, steamID, `У вас бонусов ${userBonuses || 0}`);
+    const user = await getUserDataWithSteamID(steamID);
+    if (!user) return;
+    const bonus = user.bonuses;
+    adminWarn(execute, steamID, `У вас бонусов ${bonus || 0}`);
     adminWarn(
       execute,
       steamID,
@@ -74,4 +127,6 @@ export const chatCommands: TPluginProps = (state) => {
   listener.on(EVENTS.CHAT_COMMAND_STVOL, stvol);
   listener.on(EVENTS.CHAT_COMMAND_FIX, fix);
   listener.on(EVENTS.CHAT_COMMAND_BONUS, bonus);
+  listener.on(EVENTS.CHAT_COMMAND_STATS, stats);
+  listener.on(EVENTS.CHAT_COMMAND_DISCORD, discord);
 };
