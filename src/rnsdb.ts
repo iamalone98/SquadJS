@@ -257,7 +257,7 @@ export async function updateUser(
   await collectionMain.updateOne(user, doc);
   await collectionTemp.updateOne(user, doc);
 
-  if (field === 'kills' && weapon !== '') {
+  if (field === 'kills' && weapon !== 'null') {
     const weaponFilter = `weapons.${weapon}`;
     const doc = {
       $inc: {

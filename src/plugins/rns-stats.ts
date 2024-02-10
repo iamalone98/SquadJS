@@ -128,7 +128,7 @@ export const rnsStats: TPluginProps = (state) => {
     if (attacker?.teamID === victim?.teamID && attacker.name !== victim.name) {
       return updateUser(attackerSteamID, 'teamkills');
     }
-    updateUser(attackerSteamID, 'kills', victim.weapon || '');
+    updateUser(attackerSteamID, 'kills', victim.weapon || 'null');
     updateUser(victim.steamID, 'death');
   };
 
