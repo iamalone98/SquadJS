@@ -1,24 +1,22 @@
 import { EVENTS } from '../constants';
 import { adminKillServer } from '../core';
+import {
+  createTimeStampForRestartServer,
+  getTimeStampForRestartServer,
+} from '../rnsdb';
 import { TPluginProps } from '../types';
 
 export const autorestartServers: TPluginProps = (state) => {
-  const { listener, execute, logger } = state;
-  let isTimeToRestart = false;
-  const restartInterval = 24 * 60 * 60 * 1000; //24h
+  const { listener, execute, logger, id } = state;
   let restartTimeout: NodeJS.Timeout;
   let isRestartTimeoutSet = false;
 
-  setInterval(() => {
-    isTimeToRestart = true;
-  }, restartInterval);
-
   const setRestartTimeout = () => {
-    restartTimeout = setTimeout(() => {
+    restartTimeout = setTimeout(async () => {
       logger.log('Рестарт сервера...');
-      adminKillServer(execute);
+      await createTimeStampForRestartServer(id);
+      await adminKillServer(execute);
       isRestartTimeoutSet = false;
-      isTimeToRestart = false;
     }, 300000);
 
     isRestartTimeoutSet = true;
@@ -29,16 +27,16 @@ export const autorestartServers: TPluginProps = (state) => {
     isRestartTimeoutSet = false;
   };
 
-  const autorestart = (data: string) => {
-    if (data.length === 0 && isTimeToRestart) {
-      if (isRestartTimeoutSet) {
-        clearRestartTimeout();
+  const autorestart = async (data: string) => {
+    const lastRestartTime = await getTimeStampForRestartServer(id);
+    if (!lastRestartTime) return;
+    if (new Date().getTime() - lastRestartTime > 86400000) {
+      if (data.length === 0) {
+        if (!isRestartTimeoutSet) setRestartTimeout();
       } else {
-        setRestartTimeout();
-      }
-    } else {
-      if (isRestartTimeoutSet) {
-        clearRestartTimeout();
+        if (isRestartTimeoutSet) {
+          clearRestartTimeout();
+        }
       }
     }
   };
