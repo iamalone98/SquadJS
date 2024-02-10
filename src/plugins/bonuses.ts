@@ -1,6 +1,8 @@
+import { TPlayerConnected } from 'squad-logs';
 import { EVENTS } from '../constants';
-import { updateUserBonuses } from '../rnsdb';
+import { createUserIfNullableOrUpdateName, updateUserBonuses } from '../rnsdb';
 import { TPluginProps } from '../types';
+import { getPlayerByEOSID } from './helpers';
 
 export const bonuses: TPluginProps = (state) => {
   const { listener } = state;
@@ -10,6 +12,13 @@ export const bonuses: TPluginProps = (state) => {
     steamID: string;
     timer: NodeJS.Timeout;
   }> = [];
+
+  const playerConnected = (data: TPlayerConnected) => {
+    const user = getPlayerByEOSID(state, data.eosID);
+    if (!user) return;
+    const { steamID, name } = user;
+    createUserIfNullableOrUpdateName(steamID, name);
+  };
 
   const updatedPlayers = () => {
     const { players, currentMap } = state;
@@ -48,5 +57,6 @@ export const bonuses: TPluginProps = (state) => {
     });
   };
 
+  listener.on(EVENTS.PLAYER_CONNECTED, playerConnected);
   listener.on(EVENTS.UPDATED_PLAYERS, updatedPlayers);
 };

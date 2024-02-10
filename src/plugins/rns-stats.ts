@@ -1,13 +1,7 @@
-import {
-  TPlayerConnected,
-  TPlayerDied,
-  TPlayerRevived,
-  TRoundTickets,
-} from 'squad-logs';
+import { TPlayerDied, TPlayerRevived, TRoundTickets } from 'squad-logs';
 import { EVENTS } from '../constants';
 import { adminWarn } from '../core';
 import {
-  createUserIfNullableOrUpdateName,
   getUserDataWithSteamID,
   updateGames,
   updatePossess,
@@ -30,12 +24,6 @@ export const rnsStats: TPluginProps = (state) => {
     timer: NodeJS.Timeout;
   }> = [];
   let winner: string;
-  const playerConnected = (data: TPlayerConnected) => {
-    const user = getPlayerByEOSID(state, data.eosID);
-    if (!user) return;
-    const { steamID, name } = user;
-    createUserIfNullableOrUpdateName(steamID, name);
-  };
 
   const onRoundTickets = (data: TRoundTickets) => {
     const { team, action } = data;
@@ -141,7 +129,6 @@ export const rnsStats: TPluginProps = (state) => {
     updateUser(reviverSteamID, 'revives');
   };
 
-  listener.on(EVENTS.PLAYER_CONNECTED, playerConnected);
   listener.on(EVENTS.UPDATED_PLAYERS, updatedPlayers);
   listener.on(EVENTS.PLAYER_DIED, onDied);
   listener.on(EVENTS.PLAYER_REVIVED, onRevived);
