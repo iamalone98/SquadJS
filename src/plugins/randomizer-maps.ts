@@ -19,12 +19,12 @@ export const randomizerMaps: TPluginProps = (state) => {
   const newGame = async () => {
     const { currentMap, id } = state;
     if (!currentMap?.level) return;
-    console.log(currentMap.layer);
+    // console.log(currentMap.layer);
     rnsHistoryLayers = await getHistoryLayers(id);
-    if (!rnsHistoryLayers.find((e) => e === currentMap.layer)) {
-      await serverHistoryLayers(id, currentMap.level);
-      rnsHistoryLayers.push(currentMap.level);
-    }
+    // if (!rnsHistoryLayers.find((e) => e === currentMap.layer)) {
+    //   await serverHistoryLayers(id, currentMap.level);
+    //   rnsHistoryLayers.push(currentMap.level);
+    // }
 
     const map = await recursiveGenerate();
     if (map) {
