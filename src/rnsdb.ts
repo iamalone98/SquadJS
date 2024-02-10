@@ -26,6 +26,7 @@ interface Main {
 interface Info {
   _id: string;
   rnsHistoryLayers: string[];
+  timeStampToRestart: number;
 }
 
 let db: Db;
@@ -389,4 +390,28 @@ export async function cleanHistoryLayers(
   };
 
   await collectionServerInfo.updateOne(result, data);
+}
+
+export async function getTimeStampForRestartServer(serverID: number) {
+  const server = await collectionServerInfo.findOne({
+    _id: serverID.toString(),
+  });
+
+  return server?.timeStampToRestart;
+}
+
+export async function createTimeStampForRestartServer(serverID: number) {
+  const date: number = new Date().getTime();
+
+  const id = {
+    _id: serverID.toString(),
+  };
+
+  const data = {
+    $set: {
+      timeStampToRestart: date,
+    },
+  };
+
+  await collectionServerInfo.updateOne(id, data);
 }
