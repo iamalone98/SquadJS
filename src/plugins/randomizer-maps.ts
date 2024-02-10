@@ -17,16 +17,10 @@ export const randomizerMaps: TPluginProps = (state) => {
   let rnsHistoryLayers: string[] = [];
 
   const newGame = async () => {
-    const { currentMap, id } = state;
-    if (!currentMap?.level) return;
-    // console.log(currentMap.layer);
+    const { id } = state;
     rnsHistoryLayers = await getHistoryLayers(id);
-    // if (!rnsHistoryLayers.find((e) => e === currentMap.layer)) {
-    //   await serverHistoryLayers(id, currentMap.level);
-    //   rnsHistoryLayers.push(currentMap.level);
-    // }
-
     const map = await recursiveGenerate();
+
     if (map) {
       logger.log(`Set next Layer ${map}`);
       console.log(rnsHistoryLayers);
@@ -48,7 +42,6 @@ export const randomizerMaps: TPluginProps = (state) => {
     }
 
     const layer = getRandomLayer();
-    console.log(layer);
     if (!rnsHistoryLayers.find((e) => e === layer.layer)) {
       await serverHistoryLayers(id, layer.layer);
       return layer.map;
