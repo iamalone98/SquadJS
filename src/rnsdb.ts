@@ -94,9 +94,7 @@ export async function createUserIfNullableOrUpdateName(
   steamID: string,
   name: string,
 ): Promise<void> {
-  if (!db || !isConnected) {
-    throw new Error('Database is not connected');
-  }
+  if (!db || !isConnected) return;
   try {
     const resultMain = await collectionMain.findOne({
       _id: steamID,
