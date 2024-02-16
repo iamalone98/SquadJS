@@ -37,9 +37,13 @@ const dbCollectionServerInfo = 'serverinfo';
 let collectionMain: Collection<Main>;
 let collectionTemp: Collection<Main>;
 let collectionServerInfo: Collection<Info>;
+let isConnected = false;
+let reconnectTimer: NodeJS.Timeout | null = null;
+let dbLink: string;
 
-export async function connectToDatabase(dbLink: string): Promise<void> {
-  const client = new MongoClient(dbLink);
+export async function connectToDatabase(dbURL: string): Promise<void> {
+  const client = new MongoClient(dbURL);
+  dbLink = dbURL;
 
   try {
     await client.connect();
@@ -49,8 +53,40 @@ export async function connectToDatabase(dbLink: string): Promise<void> {
     collectionMain = db.collection(dbCollectionMain);
     collectionTemp = db.collection(dbCollectionTemp);
     collectionServerInfo = db.collection(dbCollectionServerInfo);
+    isConnected = true;
+
+    if (reconnectTimer) {
+      clearTimeout(reconnectTimer);
+      reconnectTimer = null;
+    }
+
+    setInterval(pingDatabase, 60000);
   } catch (err) {
     console.error('Error connecting to MongoDB:', err);
+    isConnected = false;
+    setReconnectTimer(dbLink);
+  }
+}
+
+async function pingDatabase(dbLink: string) {
+  try {
+    const pingResult = await db.command({ ping: 1 });
+    if (pingResult.ok === 1) {
+      console.log('Database pinged successfully');
+    }
+  } catch (error) {
+    console.error('Error pinging database');
+    isConnected = false;
+    setReconnectTimer(dbLink);
+  }
+}
+
+async function setReconnectTimer(dbLink: string) {
+  if (!reconnectTimer) {
+    reconnectTimer = setTimeout(() => {
+      reconnectTimer = null;
+      connectToDatabase(dbLink);
+    }, 30000);
   }
 }
 
@@ -58,7 +94,7 @@ export async function createUserIfNullableOrUpdateName(
   steamID: string,
   name: string,
 ): Promise<void> {
-  if (!db) {
+  if (!db || !isConnected) {
     throw new Error('Database is not connected');
   }
   try {
@@ -112,6 +148,7 @@ export async function createUserIfNullableOrUpdateName(
 }
 
 async function updateUserName(steamID: string, name: string) {
+  if (!isConnected) return;
   try {
     const doc = {
       $set: {
@@ -131,6 +168,7 @@ async function updateUserName(steamID: string, name: string) {
 }
 
 export async function updateUserBonuses(steamID: string, count: number) {
+  if (!isConnected) return;
   try {
     const doc = {
       $inc: {
@@ -149,6 +187,7 @@ export async function updateUserBonuses(steamID: string, count: number) {
 }
 
 export async function updateRoles(steamID: string, role: string) {
+  if (!isConnected) return;
   const roles = [
     '_sl_',
     '_slcrewman',
@@ -198,6 +237,7 @@ export async function updateRoles(steamID: string, role: string) {
 }
 
 export async function updateTimes(steamID: string, field: string) {
+  if (!isConnected) return;
   const squadFilter = `squad.${field}`;
   const doc = {
     $inc: {
@@ -213,6 +253,7 @@ export async function updateTimes(steamID: string, field: string) {
 }
 
 export async function updatePossess(steamID: string, field: string) {
+  if (!isConnected) return;
   if (field.toLowerCase().includes('soldier')) return;
   const possessFilter = `possess.${field}`;
   const doc = {
@@ -229,6 +270,7 @@ export async function updatePossess(steamID: string, field: string) {
 }
 
 export async function getUserDataWithSteamID(steamID: string) {
+  if (!isConnected) return;
   const result = await collectionMain.findOne({
     _id: steamID,
   });
@@ -243,7 +285,7 @@ export async function updateUser(
   field: string,
   weapon?: string,
 ) {
-  if (!steamID || !field) return;
+  if (!steamID || !field || !isConnected) return;
   const doc = {
     $inc: {
       [field]: 1,
@@ -316,6 +358,7 @@ export async function updateUser(
 }
 
 export async function updateGames(steamID: string, field: string) {
+  if (!isConnected) return;
   const matchesFilter = `matches.${field}`;
   const doc = {
     $inc: {
@@ -356,7 +399,7 @@ export async function serverHistoryLayers(
   serverID: number,
   rnsHistoryLayers?: string,
 ) {
-  if (!rnsHistoryLayers) return;
+  if (!rnsHistoryLayers || !isConnected) return;
   const server = await collectionServerInfo.findOne({
     _id: serverID.toString(),
   });
@@ -371,6 +414,7 @@ export async function serverHistoryLayers(
 }
 
 export async function getHistoryLayers(serverID: number) {
+  if (!isConnected) return [];
   const result = await collectionServerInfo.findOne({
     _id: serverID.toString(),
   });
@@ -381,6 +425,7 @@ export async function cleanHistoryLayers(
   serverID: number,
   rnsHistoryLayers: string,
 ) {
+  if (!isConnected) return;
   const result = await collectionServerInfo.findOne({
     _id: serverID.toString(),
   });
@@ -393,6 +438,7 @@ export async function cleanHistoryLayers(
 }
 
 export async function getTimeStampForRestartServer(serverID: number) {
+  if (!isConnected) return;
   const server = await collectionServerInfo.findOne({
     _id: serverID.toString(),
   });
@@ -401,6 +447,7 @@ export async function getTimeStampForRestartServer(serverID: number) {
 }
 
 export async function createTimeStampForRestartServer(serverID: number) {
+  if (!isConnected) return;
   const date: number = new Date().getTime();
 
   const id = {
