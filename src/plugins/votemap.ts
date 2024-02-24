@@ -65,7 +65,7 @@ export const voteMap: TPluginProps = (state) => {
     let foundMap = false;
 
     layersToLowerCase.forEach((e) => {
-      if (e.includes(messageToLower)) {
+      if (e === messageToLower) {
         foundMap = true;
         return;
       }
