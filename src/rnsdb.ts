@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { Collection, Db, MongoClient } from 'mongodb';
 
 interface Main {
@@ -75,7 +76,8 @@ async function pingDatabase(dbLink: string) {
       console.log('Database pinged successfully');
     }
   } catch (error) {
-    console.error('Error pinging database');
+    const getTime = () => format(new Date(), 'd LLL HH:mm:ss');
+    console.error(`[${getTime()}]Error pinging database`);
     isConnected = false;
     setReconnectTimer(dbLink);
   }
