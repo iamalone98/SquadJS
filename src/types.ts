@@ -44,7 +44,7 @@ export type TServersState = {
       level: string | null;
       layer: string | null;
     };
-    tickRate?: number; // TODO
+    tickRate?: number;
   };
 };
 
@@ -56,16 +56,12 @@ export type TAdmin = {
   [key in string]: { [key in string]: boolean };
 };
 
-export type TPluginProps = (state: TState, options: TPluginOptions) => void;
+export type TPluginProps<T = unknown> = (state: TState, options: T) => void;
 
 export type TPlugin = {
   name: string;
   enabled: boolean;
-  options: TPluginOptions;
-};
-
-export type TPluginOptions = {
-  [key in string]: string;
+  options: unknown;
 };
 
 export type TPlayer = {
