@@ -76,6 +76,10 @@ export type TPluginOptions = {
   needVotes: number;
   classicBonus: number;
   seedBonus: number;
+  minPlayersForAfkKick: number;
+  kickTimeout: number;
+  warningInterval: number;
+  gracePeriod: number;
 };
 
 export type TPlayer = {
