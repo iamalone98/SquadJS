@@ -405,14 +405,13 @@ export const rnsLogs: TPluginProps = (state, options) => {
   async function onVehicleDamage(data: TVehicleDamaged) {
     if (matchIsEnded) return;
     const {
-      time,
       damage,
       attackerName,
       victimVehicle,
       attackerVehicle,
       healthRemaining,
     } = data;
-    const currentTime = new Date(time).toLocaleString('ru-RU', {
+    const currentTime = new Date().toLocaleString('ru-RU', {
       timeZone: 'Europe/Moscow',
     });
 
