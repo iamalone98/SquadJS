@@ -68,6 +68,14 @@ export type TPlugin = {
 
 export type TPluginOptions = {
   [key in string]: string;
+} & {
+  voteTick: number;
+  voteDuration: number;
+  voteRepeatDelay: number;
+  onlyForVip: boolean;
+  needVotes: number;
+  classicBonus: number;
+  seedBonus: number;
 };
 
 export type TPlayer = {

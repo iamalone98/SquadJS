@@ -4,10 +4,9 @@ import { createUserIfNullableOrUpdateName, updateUserBonuses } from '../rnsdb';
 import { TPluginProps } from '../types';
 import { getPlayerByEOSID } from './helpers';
 
-export const bonuses: TPluginProps = (state) => {
+export const bonuses: TPluginProps = (state, options) => {
   const { listener } = state;
-  const classicBonus = 1;
-  const seedBonus = 2;
+  const { classicBonus, seedBonus } = options;
   let playersBonusesCurrentTime: Array<{
     steamID: string;
     timer: NodeJS.Timeout;

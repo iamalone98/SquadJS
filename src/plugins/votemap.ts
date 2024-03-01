@@ -3,10 +3,9 @@ import { EVENTS } from '../constants';
 import { adminBroadcast, adminSetNextLayer, adminWarn } from '../core';
 import { TPluginProps } from '../types';
 
-export const voteMap: TPluginProps = (state) => {
+export const voteMap: TPluginProps = (state, options) => {
   const { listener, execute } = state;
-  const voteTick = 30000;
-  const voteDuration = 180000;
+  const { voteTick, voteDuration, onlyForVip, needVotes } = options;
   let voteReadyToStart = true;
   let voteStarting = false;
   let secondsToEnd = voteDuration / 1000;
@@ -43,7 +42,7 @@ export const voteMap: TPluginProps = (state) => {
       return;
     }
 
-    if (!admins?.[steamID]) {
+    if (onlyForVip && !admins?.[steamID]) {
       adminWarn(execute, steamID, 'Команда доступна только Vip пользователям');
       return;
     }
@@ -93,7 +92,6 @@ export const voteMap: TPluginProps = (state) => {
       const positive = votes['+'].length;
       const negative = votes['-'].length;
       const currentVotes = positive - negative <= 0 ? 0 : positive - negative;
-      const needVotes = 10;
 
       if (secondsToEnd <= 0) {
         if (currentVotes >= needVotes) {
