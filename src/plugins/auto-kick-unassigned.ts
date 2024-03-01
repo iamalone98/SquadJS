@@ -4,18 +4,13 @@ import { adminKick, adminWarn } from '../core';
 import { TPlayer, TPluginProps } from '../types';
 import { getAdmins, getPlayerByEOSID, getPlayers } from './helpers';
 
-export const autoKickUnassigned: TPluginProps = (state) => {
+export const autoKickUnassigned: TPluginProps = (state, options) => {
   const { listener, execute, logger } = state;
+  const { minPlayersForAfkKick, kickTimeout, warningInterval, gracePeriod } =
+    options;
   const trackedPlayers: Record<string, TPlayer> = {};
-  const kickTimeout = 300000;
-  const warningInterval = 30000;
-  const gracePeriod = 900000;
   let betweenRounds = false;
   const trackingListUpdateFrequency = 1 * 60 * 1000; // 1min
-  //const cleanUpFrequency = 1 * 60 * 1000; // 1min
-  const playerThreshold = 1;
-  const whitelist = getAdmins(state, 'cameraman');
-  const ignoreWhitelist = true;
 
   const newGame = () => {
     betweenRounds = true;
@@ -54,15 +49,14 @@ export const autoKickUnassigned: TPluginProps = (state) => {
   };
 
   const updateTrackingList = () => {
-    const { currentMap } = state;
     const admins = getAdmins(state, 'canseeadminchat');
-    if (currentMap?.layer?.toLowerCase().includes('seed')) return;
     const players = getPlayers(state);
+
     if (!players) return;
-    const run = !(betweenRounds || players.length < playerThreshold);
+    const run = !(betweenRounds || players.length < minPlayersForAfkKick);
     logger.log(
       `Update Tracking List? ${run} (Between rounds: ${betweenRounds}, Below player threshold: ${
-        players.length < playerThreshold
+        players.length < minPlayersForAfkKick
       })`,
     );
 
@@ -77,7 +71,6 @@ export const autoKickUnassigned: TPluginProps = (state) => {
       const isTracked = steamID in trackedPlayers;
       const isUnassigned = squadID === null;
       const isAdmin = admins?.includes(steamID);
-      const isWhitelist = whitelist?.includes(steamID);
 
       if (!isUnassigned && isTracked)
         untrackPlayer(player.steamID, 'Вступил в отряд');
@@ -85,11 +78,7 @@ export const autoKickUnassigned: TPluginProps = (state) => {
       if (!isUnassigned) continue;
 
       if (isAdmin) logger.log(`Admin is Unassigned: ${player.name}`);
-      if (isAdmin && ignoreWhitelist) continue;
-
-      if (isWhitelist)
-        logger.log(`Whitelist player is Unassigned: ${player.name}`);
-      if (isWhitelist && ignoreWhitelist) continue;
+      if (isAdmin) continue;
 
       if (!isTracked) trackedPlayers[steamID] = trackPlayer(player);
     }
