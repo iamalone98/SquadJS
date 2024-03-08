@@ -385,8 +385,15 @@ export async function updateGames(steamID: string, field: string) {
       _id: steamID,
     });
 
+    const resultTemp = await collectionTemp.findOne({
+      _id: steamID,
+    });
+
     const matchesMain =
       (resultMain?.matches.won || 0) + (resultMain?.matches.lose || 0);
+
+    const matchesTemp =
+      (resultTemp?.matches.won || 0) + (resultTemp?.matches.lose || 0);
 
     if (resultMain) {
       const doc = {
@@ -398,6 +405,18 @@ export async function updateGames(steamID: string, field: string) {
         },
       };
       await collectionMain.updateOne(user, doc);
+    }
+
+    if (resultTemp) {
+      const doc = {
+        $set: {
+          'matches.matches': matchesMain,
+          'matches.winrate': Number(
+            ((resultTemp.matches.won / matchesTemp) * 100).toFixed(3),
+          ),
+        },
+      };
+      await collectionTemp.updateOne(user, doc);
     }
   }
 }
