@@ -410,7 +410,7 @@ export async function updateGames(steamID: string, field: string) {
     if (resultTemp) {
       const doc = {
         $set: {
-          'matches.matches': matchesMain,
+          'matches.matches': matchesTemp,
           'matches.winrate': Number(
             ((resultTemp.matches.won / matchesTemp) * 100).toFixed(3),
           ),
