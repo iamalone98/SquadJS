@@ -22,6 +22,7 @@ interface Main {
     history: object;
   };
   weapons: object;
+  date?: number;
 }
 
 interface Info {
@@ -41,6 +42,7 @@ let collectionServerInfo: Collection<Info>;
 let isConnected = false;
 let reconnectTimer: NodeJS.Timeout | null = null;
 let dbLink: string;
+const cleaningTime = 604800000;
 
 export async function connectToDatabase(dbURL: string): Promise<void> {
   const client = new MongoClient(dbURL);
@@ -236,7 +238,11 @@ export async function updateRoles(steamID: string, role: string) {
   await collectionMain.updateOne(user, doc);
 }
 
-export async function updateTimes(steamID: string, field: string) {
+export async function updateTimes(
+  steamID: string,
+  field: string,
+  name: string,
+) {
   if (!isConnected) return;
   const squadFilter = `squad.${field}`;
   const doc = {
@@ -250,6 +256,7 @@ export async function updateTimes(steamID: string, field: string) {
   };
 
   await collectionMain.updateOne(user, doc);
+  await updateCollectionTemp(user, doc, name);
 }
 
 export async function updatePossess(steamID: string, field: string) {
@@ -461,4 +468,39 @@ export async function createTimeStampForRestartServer(serverID: number) {
   };
 
   await collectionServerInfo.updateOne(id, data);
+}
+
+export async function updateCollectionTemp(
+  user: { _id: string },
+  doc: object,
+  name: string,
+) {
+  const tempStats = await collectionTemp.updateOne(user, doc);
+  if (tempStats.modifiedCount !== 1) {
+    await createUserIfNullableOrUpdateName(user._id, name);
+    await collectionTemp.updateOne(user, doc);
+  }
+}
+
+export async function creatingTimeStamp() {
+  const date = new Date().getTime();
+  const userTemp = {
+    _id: 'dateTemp',
+  };
+  const dateTemp = {
+    $set: {
+      date,
+    },
+  };
+
+  const timeTemp = await collectionMain.findOne({
+    _id: 'dateTemp',
+  });
+  if (!timeTemp || !timeTemp.date) return;
+  const checkOutOfDate = date - timeTemp.date;
+  if (checkOutOfDate > cleaningTime) {
+    console.log('Статистика очищена');
+    await collectionTemp.deleteMany({});
+    await collectionMain.updateOne(userTemp, dateTemp);
+  }
 }

@@ -76,17 +76,17 @@ export const rnsStats: TPluginProps = (state) => {
           }
 
           if (user && user.isLeader && user.squadID) {
-            await updateTimes(steamID, 'leader');
+            await updateTimes(steamID, 'leader', user.name);
             const squad = getSquadByID(state, user.squadID);
             if (
               (squad && squad.squadName === 'CMD Squad') ||
               (squad && squad.squadName === 'Command Squad')
             ) {
-              await updateTimes(steamID, 'cmd');
+              await updateTimes(steamID, 'cmd', user.name);
             }
           }
-          if (user && user.name) {
-            await updateTimes(steamID, 'timeplayed');
+          if (user) {
+            await updateTimes(steamID, 'timeplayed', user.name);
           }
         }, 60000),
       });
