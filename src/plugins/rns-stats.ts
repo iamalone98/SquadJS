@@ -2,6 +2,7 @@ import { TPlayerDied, TPlayerRevived, TRoundTickets } from 'squad-logs';
 import { EVENTS } from '../constants';
 import { adminWarn } from '../core';
 import {
+  creatingTimeStamp,
   getUserDataWithSteamID,
   updateGames,
   updatePossess,
@@ -53,6 +54,7 @@ export const rnsStats: TPluginProps = (state) => {
       }
     }
     winner = '';
+    await creatingTimeStamp();
   };
 
   const updatedPlayers = () => {
