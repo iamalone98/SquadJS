@@ -140,7 +140,7 @@ export async function createUserIfNullableOrUpdateName(
     }
 
     if (resultMain) {
-      if (name !== resultMain.name.trim()) {
+      if (name.trim() !== resultMain.name.trim()) {
         await updateUserName(steamID, name.trim());
       }
     }
