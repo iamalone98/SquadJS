@@ -110,7 +110,7 @@ export async function createUserIfNullableOrUpdateName(
 
     const fields = {
       _id: steamID,
-      name,
+      name: name.trim(),
       kills: 0,
       death: 0,
       revives: 0,
