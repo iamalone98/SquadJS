@@ -51,6 +51,13 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
         await updateNextMap(id);
       }
 
+      if (
+        event === EVENTS.PLAYER_ROLE_CHANGED ||
+        event === EVENTS.PLAYER_LEADER_CHANGED
+      ) {
+        await updatePlayers(id);
+      }
+
       if (event === EVENTS.TICK_RATE) {
         const tickRateData = data as TTickRate;
 
