@@ -116,7 +116,7 @@ export const chatCommands: TPluginProps = (state) => {
     adminWarn(
       execute,
       steamID,
-      'Для получения Vip статуса !vip в дискорде discord.gg/rn-server в канале vip-за-бонусы',
+      'Для получения Vip статуса !vip в дискорде discord.gg/rn-server в канале получить-vip',
     );
     adminWarn(execute, steamID, 'Стоимость Vip статуса равна 15 000 баллов');
   };
