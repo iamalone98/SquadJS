@@ -1,6 +1,6 @@
 {
   "name": "SquadJS",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "main": "src/index.ts",
   "repository": "git@github.com:iamalone98/SquadJS.git",
   "author": "I-Am Alone <iamalone9828@gmail.com>",
@@ -18,7 +18,7 @@
     "chalk": "^5.3.0",
     "date-fns": "^2.30.0",
     "squad-logs": "^1.0.23",
-    "squad-rcon": "^1.1.6"
+    "squad-rcon": "^1.1.7"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.5",
