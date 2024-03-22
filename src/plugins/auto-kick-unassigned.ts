@@ -49,7 +49,7 @@ export const autoKickUnassigned: TPluginProps = (state, options) => {
   };
 
   const updateTrackingList = () => {
-    const admins = getAdmins(state, 'canseeadminchat');
+    const admins = getAdmins(state, 'cameraman');
     const players = getPlayers(state);
 
     if (!players) return;

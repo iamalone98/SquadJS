@@ -19,7 +19,7 @@
     "date-fns": "^2.30.0",
     "mongodb": "^6.5.0",
     "squad-logs": "^1.0.23",
-    "squad-rcon": "^1.1.5"
+    "squad-rcon": "^1.1.7"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.5",
