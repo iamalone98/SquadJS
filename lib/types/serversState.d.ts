@@ -16,6 +16,7 @@ export declare const getServersState: (id: number) => {
     maps: import("./types").TMaps;
     plugins: import("./types").TPlugin[];
     votingActive?: boolean | undefined;
+    skipmap?: boolean | undefined;
     admins?: import("./types").TAdmin | undefined;
     players?: import("./types").TPlayer[] | undefined;
     squads?: import("./types").TSquad[] | undefined;

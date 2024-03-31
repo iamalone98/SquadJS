@@ -4,11 +4,26 @@ import { adminBroadcast, adminForceTeamChange, adminWarn } from '../core';
 import { getUserDataWithSteamID } from '../rnsdb';
 import { TPluginProps } from '../types';
 
-export const chatCommands: TPluginProps = (state) => {
+export const chatCommands: TPluginProps = (state, options) => {
   const { listener, execute } = state;
+  const {
+    adminsEnable,
+    reportEnable,
+    stvolEnable,
+    fixEnable,
+    discordEnable,
+    statsEnable,
+    bonusEnable,
+    swapEnable,
+    swapTimeout,
+    statsTimeout,
+    stvolTimeout,
+  } = options;
   let players: string[] = [];
   let timeoutPlayers: string[] = [];
+  const swapHistory: any[] = [];
   const admins = (data: TChatMessage) => {
+    if (!adminsEnable) return;
     adminWarn(execute, data.steamID, 'На сервере присутствует администратор');
     adminWarn(
       execute,
@@ -18,6 +33,7 @@ export const chatCommands: TPluginProps = (state) => {
   };
 
   const report = (data: TChatMessage) => {
+    if (!reportEnable) return;
     adminWarn(
       execute,
       data.steamID,
@@ -26,6 +42,7 @@ export const chatCommands: TPluginProps = (state) => {
   };
 
   const stvol = (data: TChatMessage) => {
+    if (!stvolEnable) return;
     const { name, steamID } = data;
 
     if (players.find((player) => player === steamID)) {
@@ -41,15 +58,17 @@ export const chatCommands: TPluginProps = (state) => {
 
     setTimeout(() => {
       players = players.filter((player) => player !== steamID);
-    }, 300000);
+    }, parseInt(stvolTimeout));
   };
 
   const fix = (data: TChatMessage) => {
+    if (!fixEnable) return;
     adminForceTeamChange(execute, data.steamID);
     adminForceTeamChange(execute, data.steamID);
   };
 
   const discord = (data: TChatMessage) => {
+    if (!discordEnable) return;
     adminWarn(
       execute,
       data.steamID,
@@ -63,6 +82,7 @@ export const chatCommands: TPluginProps = (state) => {
   };
 
   const stats = async (data: TChatMessage) => {
+    if (!statsEnable) return;
     const { steamID, message } = data;
     let user;
     if (timeoutPlayers.find((p) => p === steamID)) {
@@ -98,10 +118,11 @@ export const chatCommands: TPluginProps = (state) => {
     timeoutPlayers.push(steamID);
     setTimeout(() => {
       timeoutPlayers = timeoutPlayers.filter((p) => p !== steamID);
-    }, 180000);
+    }, parseInt(statsTimeout));
   };
 
   const bonus = async (data: TChatMessage) => {
+    if (!bonusEnable) return;
     const { steamID } = data;
 
     const user = await getUserDataWithSteamID(steamID);
@@ -116,10 +137,54 @@ export const chatCommands: TPluginProps = (state) => {
     adminWarn(
       execute,
       steamID,
-      'Для получения Vip статуса !vip в дискорде discord.gg/rn-server в канале получить-vip',
+      'Для получения Vip статуса за бонусы нажмите на кнопку в дискорде discord.gg/rn-server в канале получить-vip',
     );
     adminWarn(execute, steamID, 'Стоимость Vip статуса равна 15 000 баллов');
   };
+
+  const swap = async (data: TChatMessage) => {
+    if (!swapEnable) return;
+    const deletionTime = parseInt(swapTimeout);
+    const { steamID } = data;
+
+    const existingEntry = swapHistory.find(
+      (entry) => entry.steamID === steamID,
+    );
+
+    if (existingEntry) {
+      const remainingTime =
+        deletionTime - (Date.now() - existingEntry.startTime);
+      const remainingHours = Math.floor(remainingTime / (1000 * 60 * 60));
+      const remainingMinutes = Math.floor(
+        (remainingTime % (1000 * 60 * 60)) / (1000 * 60),
+      );
+      adminWarn(
+        execute,
+        steamID,
+        `Команда доступна через ${remainingHours} ч ${remainingMinutes} мин!`,
+      );
+      return;
+    }
+
+    adminForceTeamChange(execute, steamID);
+    const deletionTimer = setTimeout(
+      () => removeSteamID(steamID),
+      deletionTime,
+    );
+    swapHistory.push({
+      steamID: steamID,
+      deletionTimer: deletionTimer,
+      startTime: Date.now(),
+    });
+  };
+
+  function removeSteamID(steamID: String) {
+    const index = swapHistory.findIndex((entry) => entry.steamID === steamID);
+    if (index !== -1) {
+      clearTimeout(swapHistory[index].deletionTimer);
+      swapHistory.splice(index, 1);
+    }
+  }
 
   listener.on(EVENTS.CHAT_COMMAND_ADMINS, admins);
   listener.on(EVENTS.CHAT_COMMAND_REPORT, report);
@@ -129,4 +194,7 @@ export const chatCommands: TPluginProps = (state) => {
   listener.on(EVENTS.CHAT_COMMAND_BONUS, bonus);
   listener.on(EVENTS.CHAT_COMMAND_STATS, stats);
   listener.on(EVENTS.CHAT_COMMAND_DISCORD, discord);
+  listener.on(EVENTS.CHAT_COMMAND_SWITCH, swap);
+  listener.on(EVENTS.CHAT_COMMAND_SWAP, swap);
+  listener.on(EVENTS.CHAT_COMMAND_SW, swap);
 };

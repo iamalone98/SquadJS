@@ -8,6 +8,7 @@ export type TConfig = {
     host: string;
     password: string;
     port: number;
+    db: string;
     mapsName: string;
     mapsRegExp: string;
     plugins: TPlugin[];
@@ -30,6 +31,7 @@ export type TServersState = {
         maps: TMaps;
         plugins: TPlugin[];
         votingActive?: boolean;
+        skipmap?: boolean;
         admins?: TAdmin;
         players?: TPlayer[];
         squads?: TSquad[];
@@ -63,6 +65,18 @@ export type TPlugin = {
 };
 export type TPluginOptions = {
     [key in string]: string;
+} & {
+    voteTick: number;
+    voteDuration: number;
+    voteRepeatDelay: number;
+    onlyForVip: boolean;
+    needVotes: number;
+    classicBonus: number;
+    seedBonus: number;
+    minPlayersForAfkKick: number;
+    kickTimeout: number;
+    warningInterval: number;
+    gracePeriod: number;
 };
 export type TPlayer = {
     name: string;
@@ -71,6 +85,8 @@ export type TPlayer = {
     teamID: string;
     role: string;
     isLeader: boolean;
+    possess?: string;
+    weapon?: string;
     squadID?: string | null;
 };
 export type TSquad = {

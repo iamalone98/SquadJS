@@ -6,33 +6,98 @@
     "logFilePath": "/SquadGame/Saved/Logs/SquadGame.log",
     "adminsFilePath": "/SquadGame/ServerConfig/Admins.cfg",
     "mapsName": "vanilla.json",
-    "mapsRegExp": "(?<layerName>[a-zA-Z]+)_(?<layerMode>.*)",
+    "mapsRegExp": "(?<layerName>[a-zA-Z]+)_(?<layerMode>.*) (?<team1>.*) (?<team2>.*)",
     "plugins": [
+      {
+        "name": "bonuses",
+        "enabled": false,
+        "options": { "classicBonus": 1, "seedBonus": 2 }
+      },
       {
         "name": "skipmap",
         "enabled": true,
+        "options": {
+          "voteTick": 30000,
+          "voteDuration": 120000,
+          "voteRepeatDelay": 900000,
+          "onlyForVip": true,
+          "needVotes": 15
+        }
+      },
+      {
+        "name": "voteMap",
+        "enabled": true,
+        "options": {
+          "voteTick": 30000,
+          "voteDuration": 180000,
+          "onlyForVip": true,
+          "needVotes": 10
+        }
+      },
+      {
+        "name": "randomizerMaps",
+        "enabled": true,
         "options": {}
+      },
+      {
+        "name": "warnPlayers",
+        "enabled": false,
+        "options": {}
+      },
+      {
+        "name": "squadLeaderRole",
+        "enabled": false,
+        "options": {}
+      },
+      {
+        "name": "autoKickUnassigned",
+        "enabled": false,
+        "options": {
+          "kickTimeout": 300000,
+          "warningInterval": 30000,
+          "gracePeriod": 900000,
+          "minPlayersForAfkKick": 98
+        }
+      },
+      {
+        "name": "chatCommands",
+        "enabled": true,
+        "options": {
+          "adminsEnable": true,
+          "reportEnable": true,
+          "stvolEnable": true,
+          "fixEnable": true,
+          "discordEnable": true,
+          "statsEnable": true,
+          "bonusEnable": true,
+          "swapEnable": true,
+          "swapTimeout": 10800000,
+          "statsTimeout": 180000,
+          "stvolTimeout": 300000
+        }
+      },
+      {
+        "name": "fobExplosionDamage",
+        "enabled": false,
+        "options": {}
+      },
+      {
+        "name": "autorestartServers",
+        "enabled": false,
+        "options": {}
+      },
+      {
+        "name": "rnsStats",
+        "enabled": false,
+        "options": {}
+      },
+      {
+        "name": "rnsLogs",
+        "enabled": false,
+        "options": {
+          "logPath": "C:/squad_server/SquadGame/Saved/Logs/rnslogs/"
+        }
       }
     ]
-  },
-  "2": {
-    "host": "127.0.0.1",
-    "password": "pass",
-    "port": 21110,
-    "logFilePath": "/SquadGame/Saved/Logs/SquadGame.log",
-    "adminsFilePath": "/SquadGame/ServerConfig/Admins.cfg",
-    "mapsName": "mee.json",
-    "mapsRegExp": "([a-zA-Z]+)_(?<layerName>[a-zA-Z]+)_(?<layerMode>.*)",
-    "plugins": [
-      {
-        "name": "skipmap",
-        "enabled": true,
-        "options": {}
-      }
-    ],
-    "ftp": {
-      "username": "root",
-      "password": "pass"
-    }
   }
 }
