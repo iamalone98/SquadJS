@@ -59,7 +59,8 @@ export const voteMap: TPluginProps = (state, options) => {
     const layersToLowerCase = new Set(
       Object.keys(state.maps).map((map) => map.toLowerCase()),
     );
-    const messageToLower = message.toLowerCase().trim().split(' ').join('_');
+    console.log(layersToLowerCase);
+    const messageToLower = message.toLowerCase().trim();
 
     let foundMap = false;
 
