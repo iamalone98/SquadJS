@@ -2,6 +2,7 @@ import { getServersState } from '../serversState';
 import { autoKickUnassigned } from './auto-kick-unassigned';
 import { autorestartServers } from './autorestart-servers';
 import { bonuses } from './bonuses';
+import { broadcast } from './broadcast';
 import { chatCommands } from './chat-commands';
 import { fobExplosionDamage } from './fobexplosiondamage';
 import { randomizerMaps } from './randomizer-maps';
@@ -24,6 +25,7 @@ const plugins = [
   rnsStats,
   bonuses,
   rnsLogs,
+  broadcast,
 ];
 
 export const initPlugins = async (id: number) => {

@@ -51,12 +51,35 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
         await updateNextMap(id);
       }
 
-      if (
-        event === EVENTS.PLAYER_ROLE_CHANGED ||
-        event === EVENTS.PLAYER_LEADER_CHANGED
-      ) {
-        await updatePlayers(id);
-      }
+      // if (event === EVENTS.PLAYER_ROLE_CHANGED) {
+      //   const player = data as TPlayerRoleChanged;
+      //   if (state.players && player) {
+      //     state.players = state.players?.map((p) => {
+      //       if (p.steamID === player.steamID) {
+      //         return {
+      //           ...p,
+      //           role: player.newRole,
+      //         };
+      //       }
+      //       return p;
+      //     });
+      //   }
+      // }
+
+      // if (event === EVENTS.PLAYER_LEADER_CHANGED) {
+      //   const player = data as TPlayerLeaderChanged;
+      //   if (state.players && player) {
+      //     state.players = state.players?.map((p) => {
+      //       if (p.steamID === player.steamID) {
+      //         return {
+      //           ...p,
+      //           isLeader: player.isLeader,
+      //         };
+      //       }
+      //       return p;
+      //     });
+      //   }
+      // }
 
       if (event === EVENTS.TICK_RATE) {
         const tickRateData = data as TTickRate;
