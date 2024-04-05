@@ -18,6 +18,13 @@ export const chatCommands: TPluginProps = (state, options) => {
     swapTimeout,
     statsTimeout,
     stvolTimeout,
+    adminsMessage,
+    reportMessage,
+    stvolMessage,
+    discordMessage,
+    statsTimeOutMessage,
+    statsPlayerNotFoundMessage,
+    bonusWarnMessage,
   } = options;
   type SwapHistoryItem = {
     steamID: string;
@@ -27,23 +34,22 @@ export const chatCommands: TPluginProps = (state, options) => {
   let players: string[] = [];
   let timeoutPlayers: string[] = [];
   const swapHistory: SwapHistoryItem[] = [];
+
+  const sendWarningMessages = (steamID: string, messages: string) => {
+    for (const message of messages) {
+      adminWarn(execute, steamID, message);
+    }
+  };
+
   const admins = (data: TChatMessage) => {
     if (!adminsEnable) return;
-    adminWarn(execute, data.steamID, 'На сервере присутствует администратор');
-    adminWarn(
-      execute,
-      data.steamID,
-      'Для связи с администратором перейдите в дискорд канал discord.gg/rn-server',
-    );
+    const { steamID } = data;
+    sendWarningMessages(steamID, adminsMessage);
   };
 
   const report = (data: TChatMessage) => {
     if (!reportEnable) return;
-    adminWarn(
-      execute,
-      data.steamID,
-      `Для завершения репорта, создайте тикет в discord.gg/rn-server`,
-    );
+    sendWarningMessages(data.steamID, reportMessage);
   };
 
   const stvol = (data: TChatMessage) => {
@@ -51,7 +57,7 @@ export const chatCommands: TPluginProps = (state, options) => {
     const { name, steamID } = data;
 
     if (players.find((player) => player === steamID)) {
-      adminWarn(execute, data.steamID, 'Разрешено использовать раз в 5 минут!');
+      sendWarningMessages(steamID, stvolMessage);
       return;
     }
 
@@ -74,16 +80,8 @@ export const chatCommands: TPluginProps = (state, options) => {
 
   const discord = (data: TChatMessage) => {
     if (!discordEnable) return;
-    adminWarn(
-      execute,
-      data.steamID,
-      'Discord сервера - https://discord.gg/rn-server',
-    );
-    adminWarn(
-      execute,
-      data.steamID,
-      'Либо в дискорде "Добавить сервер -> rn-server"',
-    );
+    const { steamID } = data;
+    sendWarningMessages(steamID, discordMessage);
   };
 
   const stats = async (data: TChatMessage) => {
@@ -91,7 +89,7 @@ export const chatCommands: TPluginProps = (state, options) => {
     const { steamID, message } = data;
     let user;
     if (timeoutPlayers.find((p) => p === steamID)) {
-      adminWarn(execute, steamID, 'Разрешено использовать раз в 3 минуты!');
+      sendWarningMessages(steamID, statsTimeOutMessage);
       return;
     }
     if (message.length === 0) {
@@ -102,11 +100,7 @@ export const chatCommands: TPluginProps = (state, options) => {
         p.name.trim().toLowerCase().includes(message.trim().toLowerCase()),
       );
       if (!getPlayer) {
-        adminWarn(
-          execute,
-          steamID,
-          'Имя указано неверно, либо игрок отсутствует на сервере!',
-        );
+        sendWarningMessages(steamID, statsPlayerNotFoundMessage);
       } else {
         user = await getUserDataWithSteamID(getPlayer.steamID);
       }
@@ -134,17 +128,7 @@ export const chatCommands: TPluginProps = (state, options) => {
     if (!user) return;
     const bonus = user.bonuses;
     adminWarn(execute, steamID, `У вас бонусов ${bonus || 0}`);
-    adminWarn(
-      execute,
-      steamID,
-      'За час игры 60 бонусов, на Seed картах 120 бонусов',
-    );
-    adminWarn(
-      execute,
-      steamID,
-      'Для получения Vip статуса за бонусы нажмите на кнопку в дискорде discord.gg/rn-server в канале получить-vip',
-    );
-    adminWarn(execute, steamID, 'Стоимость Vip статуса равна 15 000 баллов');
+    sendWarningMessages(steamID, bonusWarnMessage);
   };
 
   const swap = async (data: TChatMessage) => {
