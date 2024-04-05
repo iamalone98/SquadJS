@@ -41,13 +41,35 @@
       },
       {
         "name": "warnPlayers",
-        "enabled": false,
-        "options": {}
+        "enabled": true,
+        "options": {
+          "connectedMessage": [
+            "Ознакомьтесь с правилами сервера, чтобы избежать неприятных ситуаций.",
+            "Нарушение правил — прямой путь к бану. Соблюдайте правила и наслаждайтесь игрой!"
+          ],
+
+          "sqCreatedMessage": [
+            "Ознакомьтесь с правилами сервера, чтобы избежать неприятных ситуаций.",
+            "Нарушение правил — прямой путь к бану. Соблюдайте правила и наслаждайтесь игрой!"
+          ],
+          "roleChangedMessage": [
+            [
+              "Pilot",
+              "Запрещено управление вертолетом без навыков пилотирования!"
+            ],
+            [
+              "Crewman",
+              "Передвижение на тяж. технике в одиночку и без Сквад лидера запрещено!"
+            ]
+          ],
+          "messageAttacker": "Убил своего !!! Извинись в чате.",
+          "messageVictim": "messageVictim"
+        }
       },
       {
         "name": "squadLeaderRole",
         "enabled": false,
-        "options": {}
+        "options": { "timeDisband": 120000 }
       },
       {
         "name": "autoKickUnassigned",
@@ -74,6 +96,14 @@
           "swapTimeout": 10800000,
           "statsTimeout": 180000,
           "stvolTimeout": 300000
+        }
+      },
+      {
+        "name": "broadcast",
+        "enabled": true,
+        "options": {
+          "interval": 180000,
+          "texts": ["Текст1", "Текст2", "Текст3", "Текст4", "Текст5"]
         }
       },
       {

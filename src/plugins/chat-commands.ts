@@ -19,9 +19,14 @@ export const chatCommands: TPluginProps = (state, options) => {
     statsTimeout,
     stvolTimeout,
   } = options;
+  type SwapHistoryItem = {
+    steamID: string;
+    deletionTimer: NodeJS.Timeout;
+    startTime: number;
+  };
   let players: string[] = [];
   let timeoutPlayers: string[] = [];
-  const swapHistory: any[] = [];
+  const swapHistory: SwapHistoryItem[] = [];
   const admins = (data: TChatMessage) => {
     if (!adminsEnable) return;
     adminWarn(execute, data.steamID, 'На сервере присутствует администратор');
@@ -178,7 +183,7 @@ export const chatCommands: TPluginProps = (state, options) => {
     });
   };
 
-  function removeSteamID(steamID: String) {
+  function removeSteamID(steamID: string) {
     const index = swapHistory.findIndex((entry) => entry.steamID === steamID);
     if (index !== -1) {
       clearTimeout(swapHistory[index].deletionTimer);

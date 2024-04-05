@@ -8,8 +8,9 @@ import {
 } from '../types';
 import { getAdmins } from './helpers';
 
-export const squadLeaderRole: TPluginProps = (state) => {
+export const squadLeaderRole: TPluginProps = (state, options) => {
   const { listener, execute, logger } = state;
+  const { timeDisband } = options;
   let trackedPlayers: Record<string, TPlayer> = {};
 
   const getWarn = async (steamID: string, text: string, seconds?: number) => {
@@ -51,14 +52,13 @@ export const squadLeaderRole: TPluginProps = (state) => {
     const isAdmin = admins?.includes(player.steamID);
     if (currentMap?.layer?.toLowerCase().includes('seed')) return;
     if (isAdmin) return;
-    const timeDisband: number = 120000;
     const iterationCheck: number = 30000;
     const messageGetRole: string =
       'Возьми кит лидера или сквад будет расформирован через {{time}}сек';
     const messageDisband: string = 'Отряд расформирован';
     const messageSuccess: string = 'Спасибо что взяли кит!';
 
-    let seconds = timeDisband / 1000;
+    let seconds = parseInt(timeDisband) / 1000;
     let timer: NodeJS.Timeout | null = null;
 
     const leaderRole = getIsLeaderRole(player.role);
