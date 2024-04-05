@@ -95,7 +95,28 @@
           "swapEnable": true,
           "swapTimeout": 10800000,
           "statsTimeout": 180000,
-          "stvolTimeout": 300000
+          "stvolTimeout": 300000,
+          "adminsMessage": [
+            "На сервере присутствует администратор",
+            "Для связи с администратором перейдите в дискорд канал discord.gg/rn-server"
+          ],
+          "reportMessage": [
+            "Для завершения репорта, создайте тикет в discord.gg/rn-server"
+          ],
+          "stvolTimeOutMessage": ["Разрешено использовать раз в 5 минут!"],
+          "discordMessage": [
+            "Discord сервера - https://discord.gg/rn-server",
+            "Либо в дискорде Добавить сервер -> rn-server"
+          ],
+          "statsTimeOutMessage": ["Разрешено использовать раз в 3 минуты!"],
+          "statsPlayerNotFoundMessage": [
+            "Имя указано неверно, либо игрок отсутствует на сервере!"
+          ],
+          "bonusWarnMessage": [
+            "За час игры 60 бонусов, на Seed картах 120 бонусов",
+            "Для получения Vip статуса за бонусы нажмите на кнопку в дискорде discord.gg/rn-server в канале получить-vip",
+            "Стоимость Vip статуса равна 15 000 баллов"
+          ]
         }
       },
       {
