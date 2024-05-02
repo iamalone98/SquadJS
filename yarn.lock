@@ -1563,10 +1563,10 @@ squad-logs@^1.0.23:
     ssh2-sftp-client "^9.1.0"
     tail "^2.2.6"
 
-squad-rcon@^1.1.7:
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/squad-rcon/-/squad-rcon-1.1.7.tgz#d256a2d3b74874fe50bd3e6ceb775ad717f4df0b"
-  integrity sha512-r+r9VZDjXsgWlZm+JirQV318VEBLn2a5kRnkdU2v39qnpmIwiB5deepD+72Mi0eUrGNCSBMpdRKEGq1HlG0fYw==
+squad-rcon@^1.1.8:
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/squad-rcon/-/squad-rcon-1.1.8.tgz#d6514eb518fd87dfec469cfef0e14830bc4274f9"
+  integrity sha512-WLv3n3Vxf8uRLaVWwMCtilTWIURDGhkEPfNKZW+JA0n/kmZSwFCeZi2a5+rHrqca3fdn6D9LomevGg0Stkqw8g==
   dependencies:
     chalk "^5.3.0"
     date-fns "^2.30.0"
