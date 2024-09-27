@@ -1,6 +1,7 @@
 import EventEmitter from 'events';
 import { LogsReader } from 'squad-logs';
 import { initLogger } from './logger';
+import { TPluginsState } from './plugins/types';
 import { getServersState } from './serversState';
 
 export type TConfig = {
@@ -56,7 +57,11 @@ export type TAdmin = {
   [key in string]: { [key in string]: boolean };
 };
 
-export type TPluginProps<T = unknown> = (state: TState, options: T) => void;
+export type TPluginProps<T = unknown> = (
+  state: TState,
+  pluginsState: TPluginsState,
+  options: T,
+) => void;
 
 export type TPlugin = {
   name: string;
