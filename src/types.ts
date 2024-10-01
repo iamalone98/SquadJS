@@ -46,7 +46,7 @@ export type TServersState = {
       layer: string | null;
     };
     tickRate?: number;
-  };
+  } & TPluginsState;
 };
 
 export type TMaps = {
@@ -57,11 +57,7 @@ export type TAdmin = {
   [key in string]: { [key in string]: boolean };
 };
 
-export type TPluginProps<T = unknown> = (
-  state: TState,
-  pluginsState: TPluginsState,
-  options: T,
-) => void;
+export type TPluginProps<T = unknown> = (state: TState, options: T) => void;
 
 export type TPlugin = {
   name: string;
