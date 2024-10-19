@@ -62,7 +62,7 @@ export type TPluginProps<T = unknown> = (state: TState, options: T) => void;
 export type TPlugin = {
   name: string;
   enabled: boolean;
-  options: unknown;
+  options: any;
 };
 
 export type TPlayer = {
