@@ -9,6 +9,7 @@ export declare const EVENTS: {
     CHAT_COMMAND_SKIPMAP: string;
     ADMIN_BROADCAST: string;
     DEPLOYABLE_DAMAGED: string;
+    EXPLOSIVE_DAMAGED: string;
     NEW_GAME: string;
     PLAYER_CONNECTED: string;
     PLAYER_DISCONNECTED: string;

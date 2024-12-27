@@ -28,4 +28,4 @@ export declare const getServersState: (id: number) => {
         layer: string | null;
     } | undefined;
     tickRate?: number | undefined;
-};
+} & import("./plugins/types").TPluginsState;

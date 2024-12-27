@@ -2,6 +2,7 @@
 import EventEmitter from 'events';
 import { LogsReader } from 'squad-logs';
 import { initLogger } from './logger';
+import { TPluginsState } from './plugins/types';
 import { getServersState } from './serversState';
 export type TConfig = {
     id: number;
@@ -42,7 +43,7 @@ export type TServersState = {
             layer: string | null;
         };
         tickRate?: number;
-    };
+    } & TPluginsState;
 };
 export type TMaps = {
     [key in string]: {
@@ -55,14 +56,11 @@ export type TAdmin = {
         [key in string]: boolean;
     };
 };
-export type TPluginProps = (state: TState, options: TPluginOptions) => void;
+export type TPluginProps<T = unknown> = (state: TState, options: T) => void;
 export type TPlugin = {
     name: string;
     enabled: boolean;
-    options: TPluginOptions;
-};
-export type TPluginOptions = {
-    [key in string]: string;
+    options: any;
 };
 export type TPlayer = {
     name: string;
