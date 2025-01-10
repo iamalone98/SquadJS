@@ -73,6 +73,7 @@ export type TPlayer = {
   role: string;
   isLeader: boolean;
   squadID?: string | null;
+  ip?: string;
 };
 
 export type TSquad = {

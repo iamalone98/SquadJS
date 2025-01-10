@@ -1,4 +1,4 @@
-import { TTickRate } from 'squad-logs';
+import { TPlayerConnected, TTickRate } from 'squad-logs';
 import { UPDATE_TIMEOUT } from '../../constants';
 import { getServersState } from '../../serversState';
 import { TGetAdmins } from '../../types';
@@ -28,7 +28,7 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
   }, UPDATE_TIMEOUT);
 
   const updatesOnEvents = async () => {
-    canRunUpdateInterval = false;
+    canRunUpdateInterval = null;
     clearTimeout(updateTimeout);
     await updatePlayers(id);
     await updateSquads(id);
@@ -41,6 +41,17 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
   for (const key in EVENTS) {
     const event = EVENTS[key as keyof typeof EVENTS];
     coreListener.on(event, async (data) => {
+      if (event === EVENTS.PLAYER_CONNECTED) {
+        const player = data as TPlayerConnected;
+        const players = state.players;
+
+        state.players = players
+          ? players.map((p) =>
+              p.steamID === player.steamID ? { ...p, ip: player.ip } : p,
+            )
+          : [];
+      }
+
       if (event === EVENTS.PLAYER_CONNECTED || event === EVENTS.SQUAD_CREATED) {
         await updatesOnEvents();
       }
