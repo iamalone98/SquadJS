@@ -28,7 +28,7 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
   }, UPDATE_TIMEOUT);
 
   const updatesOnEvents = async () => {
-    canRunUpdateInterval = null;
+    canRunUpdateInterval = false;
     clearTimeout(updateTimeout);
     await updatePlayers(id);
     await updateSquads(id);
