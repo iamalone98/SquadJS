@@ -1,5 +1,6 @@
 import EventEmitter from 'events';
 import { LogsReader } from 'squad-logs';
+import { TServerInfo } from 'squad-rcon';
 import { initLogger } from './logger';
 import { TPluginsState } from './plugins/types';
 import { getServersState } from './serversState';
@@ -46,6 +47,7 @@ export type TServersState = {
       layer: string | null;
     };
     tickRate?: number;
+    serverInfo?: TServerInfo;
   } & TPluginsState;
 };
 

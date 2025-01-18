@@ -7,6 +7,7 @@ import { updateAdmins } from './updateAdmins';
 import { updateCurrentMap } from './updateCurrentMap';
 import { updateNextMap } from './updateNextMap';
 import { updatePlayers } from './updatePlayers';
+import { updateServerInfo } from './updateServerInfo';
 import { updateSquads } from './updateSquads';
 
 export const initState = async (id: number, getAdmins: TGetAdmins) => {
@@ -15,6 +16,7 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
   await updateNextMap(id);
   await updatePlayers(id);
   await updateSquads(id);
+  await updateServerInfo(id);
 
   const state = getServersState(id);
   const { coreListener, listener } = state;
@@ -25,6 +27,7 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
     if (!canRunUpdateInterval) return;
     await updatePlayers(id);
     await updateSquads(id);
+    await updateServerInfo(id);
   }, UPDATE_TIMEOUT);
 
   const updatesOnEvents = async () => {
@@ -32,6 +35,7 @@ export const initState = async (id: number, getAdmins: TGetAdmins) => {
     clearTimeout(updateTimeout);
     await updatePlayers(id);
     await updateSquads(id);
+    await updateServerInfo(id);
     updateTimeout = setTimeout(
       () => (canRunUpdateInterval = true),
       UPDATE_TIMEOUT,

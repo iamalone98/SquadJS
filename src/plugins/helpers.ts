@@ -9,8 +9,10 @@ export const getPlayerByEOSID = (state: TState, eosID: string) =>
 export const getPlayerByName = (state: TState, name: string) =>
   state.players?.find((player) => player.name.includes(name)) || null;
 
-export const getSquadByID = (state: TState, squadID: string) =>
-  state.squads?.find((squad) => squad.squadID === squadID) || null;
+export const getSquadByID = (state: TState, squadID: string, teamID: string) =>
+  state.squads?.find(
+    (squad) => squad.squadID === squadID && squad.teamID === teamID,
+  ) || null;
 
 export const getAdmins = (state: TState) =>
   state.admins
