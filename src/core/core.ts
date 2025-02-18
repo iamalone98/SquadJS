@@ -1,26 +1,26 @@
-import { initLogger } from '../logger';
 import { initPlugins } from '../plugins';
-import { serversState } from '../serversState';
-import { TSquadJS } from '../types';
+import { TConfig } from '../types';
 import { initEvents } from './events';
+import { initLogger } from './logger';
 import { initMaps } from './maps';
-import { initState } from './state';
+import { initParsers } from './parsers';
+import { serversState } from './serversState';
+import { initUpdaters } from './updaters';
 
-export const initSquadJS = async ({
-  id,
-  mapsName,
-  mapsRegExp,
-  plugins,
-  rcon,
-  logs,
-}: TSquadJS) => {
+export const initSquadJS = async (config: TConfig) => {
+  const { id, mapsName, mapsRegExp, plugins } = config;
+  const logger = initLogger(id);
+
+  const [rcon, logs] = await initParsers(config);
+
   const { rconEmitter, execute } = rcon;
   const { logsEmitter, getAdmins } = logs;
+
   const { localEmitter, coreEmitter } = initEvents({
     rconEmitter,
     logsEmitter,
   });
-  const logger = initLogger(id, true);
+
   const maps = await initMaps(mapsName, mapsRegExp, logger);
 
   serversState[id] = {
@@ -35,6 +35,6 @@ export const initSquadJS = async ({
     plugins,
   };
 
-  await initState(id, getAdmins);
+  await initUpdaters(id, getAdmins);
   await initPlugins(id);
 };

@@ -1,6 +1,6 @@
 {
   "name": "SquadJS",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "main": "src/index.ts",
   "repository": "git@github.com:iamalone98/SquadJS.git",
   "author": "I-Am Alone <iamalone9828@gmail.com>",
@@ -11,7 +11,7 @@
     "start:prod": "yarn build && node lib/index.js",
     "lint:check": "tsc --noEmit && eslint --ext .ts src/ && prettier src/ --check --ignore-unknown",
     "lint:format": "eslint --fix --ext .ts src/ && prettier src/ --write --ignore-unknown",
-    "build": "rollup -c rollup.config.js && ts-node src/buildMaps.ts",
+    "build": "rollup -c rollup.config.js && ts-node src/core/buildMaps.ts",
     "prepare": "husky install"
   },
   "dependencies": {

@@ -1,9 +1,8 @@
 import EventEmitter from 'events';
 import { LogsReader } from 'squad-logs';
 import { TServerInfo } from 'squad-rcon';
-import { initLogger } from './logger';
+import { initLogger } from './core/logger';
 import { TPluginsState } from './plugins/types';
-import { getServersState } from './serversState';
 
 export type TConfig = {
   id: number;
@@ -90,15 +89,6 @@ export type TSquad = {
   teamName: string | null;
 };
 
-export type TSquadJS = {
-  id: number;
-  mapsName: string;
-  mapsRegExp: string;
-  plugins: TPlugin[];
-  rcon: TRcon;
-  logs: TLogs;
-};
-
 export type TPlayerTeamChanged = {
   player: TPlayer;
   oldTeamID: string;
@@ -135,12 +125,10 @@ export type TError = {
   message: string;
 };
 
-export type TState = TGetServersState;
-
+export type TState = TServersState[number];
 export type TGetAdmins = LogsReader['getAdminsFile'];
-export type TLogger = ReturnType<typeof initLogger>;
 export type TExecute = (command: string) => Promise<string>;
-export type TGetServersState = ReturnType<typeof getServersState>;
+export type TLogger = ReturnType<typeof initLogger>;
 
 export type TRcon = {
   execute: TExecute;

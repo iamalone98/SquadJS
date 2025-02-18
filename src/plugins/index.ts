@@ -1,4 +1,4 @@
-import { getServersState } from '../serversState';
+import { getServersState } from '../core';
 import { discord } from './discord';
 import { skipmap } from './skipmap';
 

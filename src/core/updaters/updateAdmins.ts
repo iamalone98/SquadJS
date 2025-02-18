@@ -1,6 +1,6 @@
 import { EVENTS } from '../../constants';
-import { getServersState } from '../../serversState';
 import { TGetAdmins } from '../../types';
+import { getServersState } from '../serversState';
 
 export const updateAdmins = async (id: number, getAdmins: TGetAdmins) => {
   const { coreListener, logger } = getServersState(id);

@@ -1,38 +1,30 @@
 import chalk from 'chalk';
-import { initServer, initSquadJS } from './core';
+import { initSquadJS } from './core';
 import { TError } from './types';
-import { getConfigs } from './utils';
+import { getConfigs, getCurrentTime } from './utils';
 
-const initial = async () => {
+(async () => {
   const configs = getConfigs();
 
   if (configs?.length) {
     for (const config of configs) {
       try {
-        const [rcon, logs] = await initServer(config);
-
-        await initSquadJS({
-          rcon,
-          logs,
-          id: config.id,
-          mapsName: config.mapsName,
-          mapsRegExp: config.mapsRegExp,
-          plugins: config.plugins,
-        });
+        await initSquadJS(config);
       } catch (error) {
         const err = error as TError;
 
         if (err?.id && err?.message) {
           console.log(
-            chalk.yellow(`[SquadJS]`),
-            chalk.red(`Server ${err.id} error: ${err.message}`),
+            chalk.yellow(`[SquadJS][${err.id}][${getCurrentTime()}]`),
+            chalk.red(err.message),
           );
         } else {
-          console.log(chalk.yellow(`[SquadJS]`), chalk.red(error));
+          console.log(
+            chalk.yellow(`[SquadJS][${getCurrentTime()}]`),
+            chalk.red(error),
+          );
         }
       }
     }
   }
-};
-
-initial();
+})();

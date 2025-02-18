@@ -1,6 +1,6 @@
 import { TPlayer } from 'squad-rcon';
 import { EVENTS, UPDATERS_REJECT_TIMEOUT } from '../../constants';
-import { getServersState } from '../../serversState';
+import { getServersState } from '../serversState';
 
 export const updatePlayers = async (id: number) => {
   const { execute, coreListener, logger } = getServersState(id);

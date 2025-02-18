@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import { format } from 'date-fns';
 import fs from 'fs';
 import path from 'path';
 import url from 'url';
@@ -42,3 +43,5 @@ export const getConfigs = (): TConfig[] | null => {
     };
   });
 };
+
+export const getCurrentTime = () => format(new Date(), 'd LLL HH:mm:ss');

@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src/index.ts",
-    "target": "ES6",
+    "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "node",
     "strict": true,

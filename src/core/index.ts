@@ -14,4 +14,4 @@ export {
   adminWarn,
 } from './commands';
 export { initSquadJS } from './core';
-export { initServer } from './server';
+export { getServersState } from './serversState';

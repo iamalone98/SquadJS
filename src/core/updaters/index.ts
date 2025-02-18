@@ -1,8 +1,7 @@
 import { TPlayerConnected, TTickRate } from 'squad-logs';
-import { UPDATE_TIMEOUT } from '../../constants';
-import { getServersState } from '../../serversState';
+import { EVENTS, UPDATE_TIMEOUT } from '../../constants';
 import { TGetAdmins } from '../../types';
-import { EVENTS } from './../../constants';
+import { getServersState } from '../serversState';
 import { updateAdmins } from './updateAdmins';
 import { updateCurrentMap } from './updateCurrentMap';
 import { updateNextMap } from './updateNextMap';
@@ -10,7 +9,7 @@ import { updatePlayers } from './updatePlayers';
 import { updateServerInfo } from './updateServerInfo';
 import { updateSquads } from './updateSquads';
 
-export const initState = async (id: number, getAdmins: TGetAdmins) => {
+export const initUpdaters = async (id: number, getAdmins: TGetAdmins) => {
   await updateAdmins(id, getAdmins);
   await updateCurrentMap(id);
   await updateNextMap(id);
